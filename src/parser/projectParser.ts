@@ -1,13 +1,12 @@
 import { DOMParser } from 'xmldom';
-import { Node } from '../dom-utils/Node';
-import { Project, ProjectTree } from '../project/Project';
-
+import { Project, ProjectTree } from '../Types/Project';
 
 export class ProjectParser {
 
     constructor(private xml: string, private arrayTags: any) { }
 
     parse(): ProjectTree | undefined {
+
         const dom = (new DOMParser()).parseFromString(this.xml, "text/xml");
 
         const result: Project = {};
@@ -22,7 +21,8 @@ export class ProjectParser {
         return Object.prototype.toString.apply(o) === '[object Array]';
     }
 
-    private parseNode(xmlNode: Node, result: any) {
+    private parseNode(xmlNode: any, result: any) {
+
         if (xmlNode.nodeName === "#text") {
             const v = xmlNode.nodeValue;
             if (v && v.trim()) {

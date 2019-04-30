@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { NugetProvider } from './NugetExplorer';
+import { NugetProvider } from './views/NugetExplorer';
 
 export function activate(context: vscode.ExtensionContext) {
 

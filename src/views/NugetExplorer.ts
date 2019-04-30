@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { ProjectParser } from './parser/projectParser';
-import { DepResolver } from './parser/depResolver';
+import { ProjectParser } from '../parser/ProjectParser';
+import { DepResolver } from '../parser/DepResolver';
 import { NugetPackage } from './NugetPackage';
 
 export class NugetProvider implements vscode.TreeDataProvider<NugetPackage> {

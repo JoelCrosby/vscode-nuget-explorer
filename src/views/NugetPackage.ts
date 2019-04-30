@@ -16,8 +16,8 @@ export class NugetPackage extends vscode.TreeItem {
     }
 
     iconPath = {
-        light: path.join(__filename, '..', '..', 'media', 'light', 'dep.svg'),
-        dark: path.join(__filename, '..', '..', 'media', 'dark', 'dep.svg'),
+        light: path.join(__filename, '..', '..', '..', 'media', 'light', 'dep.svg'),
+        dark: path.join(__filename, '..', '..', '..', 'media', 'dark', 'dep.svg'),
     };
 
     contextValue = 'dependency';

@@ -1,6 +1,6 @@
-import { ProjectTree } from "../project/Project";
+import { ProjectTree } from "../Types/Project";
 import * as vscode from 'vscode';
-import { NugetPackage } from "../NugetPackage";
+import { NugetPackage } from "../views/NugetPackage";
 
 export class DepResolver {
 
