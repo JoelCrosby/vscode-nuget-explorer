@@ -2,90 +2,89 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 
+import { ProjectParser } from './parser/projectParser';
+import { DepResolver } from './parser/depResolver';
+import { NugetPackage } from './NugetPackage';
+
 export class NugetProvider implements vscode.TreeDataProvider<NugetPackage> {
-  onDidChangeTreeData?: vscode.Event<NugetPackage | null | undefined> | undefined;
 
-  constructor(private workspaceRoot: string) { }
+    private _onDidChangeTreeData: vscode.EventEmitter<NugetPackage | undefined> = new vscode.EventEmitter<NugetPackage | undefined>();
+    readonly onDidChangeTreeData?: vscode.Event<NugetPackage | null | undefined> | undefined;
 
-  getTreeItem(element: NugetPackage): vscode.TreeItem | Thenable<vscode.TreeItem> {
-    return new vscode.TreeItem('test', vscode.TreeItemCollapsibleState.None);
-  }
+    constructor(private workspaceRoot: string) { }
 
-  getChildren(element?: NugetPackage | undefined): vscode.ProviderResult<NugetPackage[]> {
-    if (!this.workspaceRoot) {
-      vscode.window.showInformationMessage('No dependency in empty workspace');
-      return Promise.resolve([]);
+    getTreeItem(element: NugetPackage): vscode.TreeItem | Thenable<vscode.TreeItem> {
+        return element;
     }
 
-    if (element) {
-      return Promise.resolve(this.getDepsInPackageJson(path.join(this.workspaceRoot, 'node_modules', element.label, 'package.json')));
-    } else {
-      const packageJsonPath = path.join(this.workspaceRoot, 'package.json');
-      if (this.pathExists(packageJsonPath)) {
-        return Promise.resolve(this.getDepsInPackageJson(packageJsonPath));
-      } else {
-        vscode.window.showInformationMessage('Workspace has no package.json');
-        return Promise.resolve([]);
-      }
-    }
-  }
+    getChildren(element?: NugetPackage | undefined): vscode.ProviderResult<NugetPackage[]> {
 
-  private getDepsInPackageJson(packageJsonPath: string): NugetPackage[] {
-
-    if (this.pathExists(packageJsonPath)) {
-      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
-
-      const toDep = (moduleName: string, version: string): NugetPackage => {
-        if (this.pathExists(path.join(this.workspaceRoot, 'node_modules', moduleName))) {
-          return new NugetPackage(moduleName, version, vscode.TreeItemCollapsibleState.Collapsed);
-        } else {
-          return new NugetPackage(moduleName, version, vscode.TreeItemCollapsibleState.None, {
-            command: 'extension.openPackageOnNpm',
-            title: '',
-            arguments: [moduleName],
-          });
+        if (!this.workspaceRoot) {
+            vscode.window.showInformationMessage('No dependency in empty workspace');
+            return Promise.resolve([]);
         }
-      };
 
-      const deps = packageJson.dependencies ? Object.keys(packageJson.dependencies).map(dep => toDep(dep, packageJson.dependencies[dep])) : [];
-      const devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).map(dep => toDep(dep, packageJson.devDependencies[dep])) : [];
-      return deps.concat(devDeps);
-    } else {
-      return [];
+        if (element) {
+            return Promise.resolve([]);
+        } else {
+
+            const projectFile = this.resolveProjectFile(this.workspaceRoot);
+            const projectFilePath = path.join(this.workspaceRoot, projectFile);
+
+            if (this.pathExists(projectFilePath)) {
+                const items = this.getDepsInProjectFile(projectFilePath);
+                return Promise.resolve(items);
+            } else {
+                vscode.window.showInformationMessage('Workspace has no .csproj project file');
+                return Promise.resolve([]);
+            }
+        }
     }
-  }
 
-  private pathExists(p: string): boolean {
+    private resolveProjectFile(root: string): string {
 
-    try {
-      fs.accessSync(p);
-    } catch (err) {
-      return false;
+        const files = fs.readdirSync(root);
+        const projExpr = /([a-zA-Z0-9\s_\\.\-\(\):])+(.csproj)$/g;
+
+        let projectFile = '';
+
+        files.forEach(file => {
+            if (file.match(projExpr)) {
+                projectFile = file;
+            }
+        });
+
+        return projectFile;
     }
 
-    return true;
-  }
+    private getDepsInProjectFile(projectFilePath: string): NugetPackage[] {
 
-  refresh() { }
-}
+        if (!this.pathExists(projectFilePath)) { return []; }
 
-export class NugetPackage extends vscode.TreeItem {
-  constructor(public readonly label: string, private version: string, public readonly collapsibleState: vscode.TreeItemCollapsibleState, public readonly command?: vscode.Command) {
-    super(label, collapsibleState);
-  }
+        const projectFileString = fs.readFileSync(projectFilePath).toString();
 
-  get tooltip(): string {
-    return `${this.label}-${this.version}`;
-  }
+        const parser = new ProjectParser(projectFileString, []);
+        const projectTree = parser.parse();
 
-  get description(): string {
-    return this.version;
-  }
+        if (!projectTree) { return []; }
 
-  iconPath = {
-    light: path.join(__filename, '..', '..', 'resources', 'light', 'dependency.svg'),
-    dark: path.join(__filename, '..', '..', 'resources', 'dark', 'dependency.svg'),
-  };
+        const items = DepResolver.resolve(projectTree);
 
-  contextValue = 'dependency';
+        return items;
+    }
+
+    private pathExists(path: string | undefined): boolean {
+
+        if (!path) { return false; }
+        try {
+            fs.accessSync(path);
+        } catch (err) {
+            return false;
+        }
+        return true;
+    }
+
+    refresh() {
+        this._onDidChangeTreeData.fire();
+    }
 }

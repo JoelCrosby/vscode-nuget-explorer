@@ -11,7 +11,9 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:csharp"
+    "onLanguage:csharp",
+    "onLanguage:typescript",
+    "onLanguage:javascript"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -31,17 +33,17 @@
           "name": "Installed Packages"
         }
       ]
-	},
-	"commands": [
-		{
-			"command": "nuget-explorer.refresh",
-			"title": "NuGet: Refresh",
-			"icon": {
-				"light": "resources/light/refresh.svg",
-				"dark": "resources/dark/refresh.svg"
-			}
-		}
-	]
+    },
+    "commands": [
+      {
+        "command": "nuget-explorer.refresh",
+        "title": "NuGet: Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -51,10 +53,14 @@
     "test": "npm run compile && node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
-    "typescript": "^3.3.1",
-    "vscode": "^1.1.28",
-    "tslint": "^5.12.1",
+    "@types/mocha": "^2.2.42",
     "@types/node": "^10.12.21",
-    "@types/mocha": "^2.2.42"
+    "@types/xmldom": "^0.1.29",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.1",
+    "vscode": "^1.1.28"
+  },
+  "dependencies": {
+    "xmldom": "~0.1.27"
   }
 }

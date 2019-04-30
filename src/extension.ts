@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { NugetProvider } from './nugetExplorer';
+import { NugetProvider } from './NugetExplorer';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -9,8 +9,10 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   const nugetProvider = new NugetProvider(vscode.workspace.rootPath);
+
   vscode.window.registerTreeDataProvider('nuget-installed', nugetProvider);
   vscode.commands.registerCommand('nuget-explorer.refresh', () => nugetProvider.refresh());
+
 }
 
 export function deactivate() { }
