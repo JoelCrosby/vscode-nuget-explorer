@@ -20,7 +20,7 @@
         {
           "id": "nuget-explorer",
           "title": "NuGet Explorer",
-          "icon": "media/nuget.svg",
+          "icon": "resources/nuget.svg",
           "when": "inDotnetProject"
         }
       ]
@@ -39,16 +39,16 @@
         "command": "nuget-explorer.refresh",
         "title": "NuGet: Refresh Packages",
         "icon": {
-          "light": "media/light/refresh.svg",
-          "dark": "media/dark/refresh.svg"
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
         }
       },
       {
         "command": "nuget-explorer.install",
         "title": "NuGet: Install Package",
         "icon": {
-          "light": "media/light/add.svg",
-          "dark": "media/dark/add.svg"
+          "light": "resources/light/add.svg",
+          "dark": "resources/dark/add.svg"
         }
       },
       {
