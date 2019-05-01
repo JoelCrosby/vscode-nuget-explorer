@@ -1,14 +1,26 @@
 {
   "name": "nuget-explorer",
   "displayName": "NuGet Explorer",
-  "description": "",
+  "description": "A simple way to search, add, update and remove NuGet packages in .Net Core projects.",
   "version": "0.0.1",
   "publisher": "joel-crosby",
+  "icon": "resources/icon.png",
   "engines": {
     "vscode": "^1.33.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JoelCrosby/vscode-nuget-explorer"
+  },
   "categories": [
     "Other"
+  ],
+  "keywords": [
+    "nuget",
+    "nuget explorer",
+    "dotnet",
+    ".net",
+    "dotnetcore"
   ],
   "activationEvents": [
     "workspaceContains:*.csproj"

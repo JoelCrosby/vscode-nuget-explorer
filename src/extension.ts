@@ -22,7 +22,6 @@ export function activate(context: vscode.ExtensionContext) {
   const installedPackagesView = new InstalledPackagesView(workspaceManagers);
 
   workspaces.forEach((worksapce: vscode.WorkspaceFolder) => {
-
     const resolver = new PackageResolver(worksapce.uri.fsPath);
     const nugetManager = new NugetManager(dotnetManager, installedPackagesView);
 
@@ -44,6 +43,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 }
 
-export function deactivate() { }
+export function deactivate() {
+  vscode.commands.executeCommand('setContext', 'inDotnetProject', false);
+}
 
 

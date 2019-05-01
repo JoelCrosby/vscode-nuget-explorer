@@ -18,6 +18,7 @@ export class InstalledPackagesView implements vscode.TreeDataProvider<NugetPacka
         if (element && element.type === TreeItemType.workspace) {
             return this.getPackageTreeItems(element);
         } else {
+
             return this.managers.map(manager => {
                 return new NugetPackageTreeItem(
                     manager.name,
@@ -38,6 +39,7 @@ export class InstalledPackagesView implements vscode.TreeDataProvider<NugetPacka
         if (!element.manager) { return []; }
 
         return element.manager.resolver.getPackages()
+
             .then((packages) => {
 
                 if (packages.length < 1) {
