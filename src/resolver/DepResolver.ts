@@ -3,7 +3,7 @@ import { NugetPackage } from "../models/NugetPackage";
 
 export class DepResolver {
 
-    static resolve(project: ProjectTree) {
+    static resolve(project: ProjectTree): NugetPackage[] {
         if (!project.ItemGroup) { return []; }
 
         const packages: NugetPackage[] = [];
@@ -28,9 +28,9 @@ export class DepResolver {
         if (itemGroup.hasOwnProperty('PackageReference')) {
             itemGroup.PackageReference.forEach((ref: any) => {
                 pakages.push({
-                    id: ref.id,
-                    name: ref.Include,
-                    version: ref.Version
+                    id: ref.$.Include,
+                    name: ref.$.Include,
+                    version: ref.$.Version
                 });
             });
         }

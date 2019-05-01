@@ -18,14 +18,15 @@ export class InstalledPackages implements vscode.TreeDataProvider<NugetPackageTr
         if (element) {
             return Promise.resolve([]);
         } else {
-            return this.packageResolver.getPackages()
-                .map(item =>
+            return this.packageResolver.getPackages().then((packages) => {
+                return packages.map(item =>
                     new NugetPackageTreeItem(
                         item.name,
                         item.version,
                         vscode.TreeItemCollapsibleState.None
                     )
                 );
+            });
         }
     }
 

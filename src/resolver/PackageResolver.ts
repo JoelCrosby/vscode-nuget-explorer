@@ -10,13 +10,13 @@ export class PackageResolver {
 
     constructor(private workspaceRoot: string) { }
 
-    getPackages(): NugetPackage[] {
+    async getPackages(): Promise<NugetPackage[]> {
         const projectFile = this.resolveProjectFile(this.workspaceRoot);
         const projectFilePath = path.join(this.workspaceRoot, projectFile);
 
         if (this.pathExists(projectFilePath)) {
             const items = this.getDepsInProjectFile(projectFilePath);
-            return items;
+            return await items;
         } else {
             vscode.window.showInformationMessage('Workspace has no .csproj project file');
             return [];
@@ -39,14 +39,14 @@ export class PackageResolver {
         return projectFile;
     }
 
-    private getDepsInProjectFile(projectFilePath: string): NugetPackage[] {
+    private async getDepsInProjectFile(projectFilePath: string): Promise<NugetPackage[]> {
 
         if (!this.pathExists(projectFilePath)) { return []; }
 
         const projectFileString = fs.readFileSync(projectFilePath).toString();
 
         const parser = new ProjectParser(projectFileString, []);
-        const projectTree = parser.parse();
+        const projectTree = await parser.parse();
 
         if (!projectTree) { return []; }
 

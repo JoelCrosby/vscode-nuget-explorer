@@ -87,6 +87,7 @@
   "devDependencies": {
     "@types/mocha": "^2.2.42",
     "@types/node": "^10.12.21",
+    "@types/xml2js": "^0.4.4",
     "@types/xmldom": "^0.1.29",
     "tslint": "^5.12.1",
     "typescript": "^3.3.1",
@@ -94,6 +95,6 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "xmldom": "~0.1.27"
+    "xml2js": "^0.4.19"
   }
 }
