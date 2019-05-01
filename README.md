@@ -8,6 +8,6 @@ Shows a list of the currently insalled packages in a dotnet core project.
 
 Users appreciate release notes as you update your extension.
 
-### 1.0.0
+### 0.0.1
 
 Initial release

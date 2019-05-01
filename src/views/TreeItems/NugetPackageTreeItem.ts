@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-export class NugetPackage extends vscode.TreeItem {
+export class NugetPackageTreeItem extends vscode.TreeItem {
 
     constructor(public readonly label: string, private version: string, public readonly collapsibleState: vscode.TreeItemCollapsibleState, public readonly command?: vscode.Command) {
         super(label, collapsibleState);

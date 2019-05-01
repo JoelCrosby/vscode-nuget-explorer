@@ -4,7 +4,7 @@ import Axios from 'axios';
 import { SearchResult } from './NugetApi/SearchResult';
 import { DotnetManager } from './DotnetManager';
 import { InstalledPackages } from '../views/InstalledPackages';
-import { NugetPackage } from '../views/TreeItems/NugetPackage';
+import { NugetPackageTreeItem } from '../views/TreeItems/NugetPackageTreeItem';
 
 export class NugetManager {
 
@@ -50,7 +50,7 @@ export class NugetManager {
         this.installedPackages.refresh();
     }
 
-    async uninstall(nugetPackage: NugetPackage) {
+    async uninstall(nugetPackage: NugetPackageTreeItem) {
 
         if (!nugetPackage) { return; }
 

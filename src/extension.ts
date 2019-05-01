@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { InstalledPackages } from './views/InstalledPackages';
 import { NugetManager } from './manager/NugetManager';
 import { DotnetManager } from './manager/DotnetManager';
+import { PackageResolver } from './resolver/PackageResolver';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -13,7 +14,8 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   const dotnetManager = new DotnetManager(vscode.window.createOutputChannel('NuGet'));
-  const installedPackages = new InstalledPackages(vscode.workspace.rootPath);
+  const resolver = new PackageResolver(vscode.workspace.rootPath);
+  const installedPackages = new InstalledPackages(resolver);
 
   const nugetManager = new NugetManager(dotnetManager, installedPackages);
 

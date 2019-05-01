@@ -1,5 +1,6 @@
 import { DOMParser } from 'xmldom';
 import { Project, ProjectTree } from './types/Project';
+import { isArray } from '../utils';
 
 export class ProjectParser {
 
@@ -17,10 +18,6 @@ export class ProjectParser {
         return result.Project;
     }
 
-    private isArray(o: any) {
-        return Object.prototype.toString.apply(o) === '[object Array]';
-    }
-
     private parseNode(xmlNode: any, result: any) {
 
         if (xmlNode.nodeName === "#text") {
@@ -34,7 +31,7 @@ export class ProjectParser {
         const jsonNode: any = {};
         const existing = result[xmlNode.nodeName];
         if (existing) {
-            if (!this.isArray(existing)) {
+            if (!isArray(existing)) {
                 result[xmlNode.nodeName] = [existing, jsonNode];
             }
             else {
