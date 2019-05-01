@@ -1,29 +1,46 @@
 import * as vscode from 'vscode';
-import { InstalledPackages } from './views/InstalledPackages';
+
+import { InstalledPackagesView } from './views/InstalledPackagesView';
 import { NugetManager } from './manager/NugetManager';
 import { DotnetManager } from './manager/DotnetManager';
 import { PackageResolver } from './resolver/PackageResolver';
+import { WorkspaceManager } from './manager/WorkspaceManager';
 
 export function activate(context: vscode.ExtensionContext) {
 
   vscode.commands.executeCommand('setContext', 'inDotnetProject', true);
 
-  if (!vscode.workspace.rootPath) {
+  const workspaces = vscode.workspace.workspaceFolders;
+
+  if (!workspaces || workspaces.length < 1) {
     vscode.window.showInformationMessage('No dependency in empty workspace');
     return Promise.resolve([]);
   }
 
   const dotnetManager = new DotnetManager(vscode.window.createOutputChannel('NuGet'));
-  const resolver = new PackageResolver(vscode.workspace.rootPath);
-  const installedPackages = new InstalledPackages(resolver);
+  const workspaceManagers: WorkspaceManager[] = [];
+  const installedPackagesView = new InstalledPackagesView(workspaceManagers);
 
-  const nugetManager = new NugetManager(dotnetManager, installedPackages);
+  workspaces.forEach((worksapce: vscode.WorkspaceFolder) => {
 
-  vscode.window.registerTreeDataProvider('nuget-installed', installedPackages);
+    const resolver = new PackageResolver(worksapce.uri.fsPath);
+    const nugetManager = new NugetManager(dotnetManager, installedPackagesView);
 
-  vscode.commands.registerCommand('nuget-explorer.refresh', () => installedPackages.refresh());
-  vscode.commands.registerCommand('nuget-explorer.install', () => nugetManager.install());
-  vscode.commands.registerCommand('nuget-explorer.uninstall', (item) => nugetManager.uninstall(item));
+    workspaceManagers.push(new WorkspaceManager(worksapce.name, resolver, nugetManager));
+  });
+
+  vscode.window.registerTreeDataProvider('nuget-installed', installedPackagesView);
+
+  const selectedWorksapceManager = workspaceManagers[0];
+
+  vscode.commands.registerCommand('nuget-explorer.refresh',
+    () => installedPackagesView.refresh());
+
+  vscode.commands.registerCommand('nuget-explorer.install',
+    () => selectedWorksapceManager.nugetManager.install());
+
+  vscode.commands.registerCommand('nuget-explorer.uninstall',
+    (item) => selectedWorksapceManager.nugetManager.uninstall(item));
 
 }
 

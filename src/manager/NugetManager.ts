@@ -3,12 +3,12 @@ import Axios from 'axios';
 
 import { SearchResult } from './NugetApi/SearchResult';
 import { DotnetManager } from './DotnetManager';
-import { InstalledPackages } from '../views/InstalledPackages';
+import { InstalledPackagesView } from '../views/InstalledPackagesView';
 import { NugetPackageTreeItem } from '../views/TreeItems/NugetPackageTreeItem';
 
 export class NugetManager {
 
-    constructor(private dotnetManager: DotnetManager, private installedPackages: InstalledPackages) {
+    constructor(private dotnetManager: DotnetManager, private installedPackages: InstalledPackagesView) {
 
     }
 
