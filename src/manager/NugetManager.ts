@@ -23,7 +23,8 @@ export class NugetManager {
 
         const options = results.data.map(result => result.id);
 
-        const selectedOptions = await vscode.window.showQuickPick(options, { canPickMany: true, placeHolder: 'Select Packages' });
+        const selectedOptions = await vscode.window.showQuickPick(options,
+            { canPickMany: true, placeHolder: 'Select Packages' });
 
         if (!selectedOptions || selectedOptions.length < 0) { return; }
 
