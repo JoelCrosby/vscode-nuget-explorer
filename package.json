@@ -11,9 +11,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:csharp",
-    "onLanguage:typescript",
-    "onLanguage:javascript"
+    "workspaceContains:*.csproj"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -22,7 +20,8 @@
         {
           "id": "nuget-explorer",
           "title": "Nuget Explorer",
-          "icon": "media/nuget.svg"
+          "icon": "media/nuget.svg",
+          "when": "inDotnetProject"
         }
       ]
     },
@@ -30,20 +29,30 @@
       "nuget-explorer": [
         {
           "id": "nuget-installed",
-          "name": "Installed Packages"
+          "name": "Installed Packages",
+          "when": "inDotnetProject"
         }
       ]
     },
     "commands": [
       {
         "command": "nuget-explorer.refresh",
-        "title": "NuGet: Refresh",
+        "title": "Refresh Packages",
         "icon": {
-          "light": "resources/light/refresh.svg",
-          "dark": "resources/dark/refresh.svg"
+          "light": "media/light/refresh.svg",
+          "dark": "media/dark/refresh.svg"
         }
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "nuget-explorer.refresh",
+          "when": "view == nuget-installed",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

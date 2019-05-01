@@ -3,6 +3,8 @@ import { NugetProvider } from './views/NugetExplorer';
 
 export function activate(context: vscode.ExtensionContext) {
 
+  vscode.commands.executeCommand('setContext', 'inDotnetProject', true);
+
   if (!vscode.workspace.rootPath) {
     vscode.window.showInformationMessage('No dependency in empty workspace');
     return Promise.resolve([]);
@@ -16,3 +18,5 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() { }
+
+
