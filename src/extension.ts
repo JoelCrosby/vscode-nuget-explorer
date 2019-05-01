@@ -21,6 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   vscode.commands.registerCommand('nuget-explorer.refresh', () => installedPackages.refresh());
   vscode.commands.registerCommand('nuget-explorer.install', () => nugetManager.install());
+  vscode.commands.registerCommand('nuget-explorer.uninstall', (item) => nugetManager.uninstall(item));
 
 }
 

@@ -4,6 +4,7 @@ import Axios from 'axios';
 import { SearchResult } from './NugetApi/SearchResult';
 import { DotnetManager } from './DotnetManager';
 import { InstalledPackages } from '../views/InstalledPackages';
+import { NugetPackage } from '../views/TreeItems/NugetPackage';
 
 export class NugetManager {
 
@@ -13,7 +14,7 @@ export class NugetManager {
 
     async install() {
         const query = await vscode.window.showInputBox(
-            { placeHolder: 'Search Nuget Pacakges', prompt: 'Search Nuget Pacakges' });
+            { prompt: 'Search the NuGet Gallery for Pacakages', placeHolder: 'Search for Pacakges' });
 
         if (!query) { return; }
 
@@ -28,15 +29,43 @@ export class NugetManager {
 
         if (!selectedOptions || selectedOptions.length < 0) { return; }
 
-        const packagesToInstall: Promise<void>[] = [];
+        await vscode.window.withProgress({
+            location: vscode.ProgressLocation.Notification,
+            title: "NuGet Installing Packages",
+            cancellable: false
+        }, async () => {
 
-        selectedOptions.forEach(async option => {
-            packagesToInstall.push(this.dotnetManager.execute(['add', 'package', option]));
+            const packagesToInstall: Promise<void>[] = [];
+
+            selectedOptions.forEach(async option => {
+                packagesToInstall.push(this.dotnetManager.execute(['add', 'package', option]));
+            });
+
+            await Promise.all(packagesToInstall);
+
         });
 
-        const completedInstalls = await Promise.all(packagesToInstall);
+        vscode.window.showInformationMessage('NuGet Package(s) installed');
 
         this.installedPackages.refresh();
+    }
+
+    async uninstall(nugetPackage: NugetPackage) {
+
+        if (!nugetPackage) { return; }
+
+        await vscode.window.withProgress({
+            location: vscode.ProgressLocation.Notification,
+            title: "NuGet Removing Package " + nugetPackage.label,
+            cancellable: false
+        }, async () => {
+
+            await this.dotnetManager.execute(['remove', 'package', nugetPackage.label]);
+
+            vscode.window.showInformationMessage(`NuGet Package ${nugetPackage.label} Removed`);
+
+            this.installedPackages.refresh();
+        });
     }
 
     async search(query: string): Promise<SearchResult | undefined> {

@@ -19,7 +19,7 @@
       "activitybar": [
         {
           "id": "nuget-explorer",
-          "title": "Nuget Explorer",
+          "title": "NuGet Explorer",
           "icon": "media/nuget.svg",
           "when": "inDotnetProject"
         }
@@ -37,7 +37,7 @@
     "commands": [
       {
         "command": "nuget-explorer.refresh",
-        "title": "Refresh Packages",
+        "title": "NuGet: Refresh Packages",
         "icon": {
           "light": "media/light/refresh.svg",
           "dark": "media/dark/refresh.svg"
@@ -50,6 +50,10 @@
           "light": "media/light/add.svg",
           "dark": "media/dark/add.svg"
         }
+      },
+      {
+        "command": "nuget-explorer.uninstall",
+        "title": "Remove Package"
       }
     ],
     "menus": {
@@ -63,6 +67,12 @@
           "command": "nuget-explorer.install",
           "when": "view == nuget-installed",
           "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "nuget-explorer.uninstall",
+          "when": "view == nuget-installed && viewItem == nugetPackage"
         }
       ]
     }

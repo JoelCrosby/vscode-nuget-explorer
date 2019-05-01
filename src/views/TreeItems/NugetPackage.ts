@@ -20,5 +20,5 @@ export class NugetPackage extends vscode.TreeItem {
         dark: path.join(__filename, '..', '..', '..', '..', 'media', 'dark', 'dep.svg'),
     };
 
-    contextValue = 'dependency';
+    contextValue = 'nugetPackage';
 }

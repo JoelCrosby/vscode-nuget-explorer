@@ -7,7 +7,7 @@ export class DotnetManager {
 
     constructor(private output: vscode.OutputChannel) { }
 
-    async execute(commands: string[], terminal: string = 'NuGet'): Promise<void> {
+    async execute(commands: string[]): Promise<void> {
         return new Promise((resolve, reject) => {
 
             if (!vscode.workspace.rootPath) { return; }
@@ -20,7 +20,7 @@ export class DotnetManager {
             dotnet.stdout.setEncoding('utf8');
 
             dotnet.stdout.on('data', (chunk) => {
-                this.output.appendLine(chunk);
+                this.output.append(chunk);
             });
 
             dotnet.stdout.on('error', (err: Error) => {
@@ -30,7 +30,6 @@ export class DotnetManager {
             });
 
             dotnet.on('close', (code) => {
-                this.output.appendLine(`child process exited with code ${code}`);
                 process.chdir(returnWd);
                 resolve();
             });
