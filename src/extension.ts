@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
-import { NugetProvider } from './views/NugetExplorer';
+import { InstalledPackages } from './views/InstalledPackages';
+import { NugetManager } from './manager/NugetManager';
+import { DotnetManager } from './manager/DotnetManager';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -10,10 +12,15 @@ export function activate(context: vscode.ExtensionContext) {
     return Promise.resolve([]);
   }
 
-  const nugetProvider = new NugetProvider(vscode.workspace.rootPath);
+  const dotnetManager = new DotnetManager(vscode.window.createOutputChannel('NuGet'));
+  const installedPackages = new InstalledPackages(vscode.workspace.rootPath);
 
-  vscode.window.registerTreeDataProvider('nuget-installed', nugetProvider);
-  vscode.commands.registerCommand('nuget-explorer.refresh', () => nugetProvider.refresh());
+  const nugetManager = new NugetManager(dotnetManager, installedPackages);
+
+  vscode.window.registerTreeDataProvider('nuget-installed', installedPackages);
+
+  vscode.commands.registerCommand('nuget-explorer.refresh', () => installedPackages.refresh());
+  vscode.commands.registerCommand('nuget-explorer.install', () => nugetManager.install());
 
 }
 

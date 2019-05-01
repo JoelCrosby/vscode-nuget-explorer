@@ -1,5 +1,5 @@
 import { DOMParser } from 'xmldom';
-import { Project, ProjectTree } from '../Types/Project';
+import { Project, ProjectTree } from './types/Project';
 
 export class ProjectParser {
 

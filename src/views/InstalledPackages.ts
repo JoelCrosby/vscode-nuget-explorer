@@ -4,12 +4,12 @@ import * as fs from 'fs';
 
 import { ProjectParser } from '../parser/ProjectParser';
 import { DepResolver } from '../parser/DepResolver';
-import { NugetPackage } from './NugetPackage';
+import { NugetPackage } from './TreeItems/NugetPackage';
 
-export class NugetProvider implements vscode.TreeDataProvider<NugetPackage> {
+export class InstalledPackages implements vscode.TreeDataProvider<NugetPackage> {
 
     private _onDidChangeTreeData: vscode.EventEmitter<NugetPackage | undefined> = new vscode.EventEmitter<NugetPackage | undefined>();
-    readonly onDidChangeTreeData?: vscode.Event<NugetPackage | null | undefined> | undefined;
+    readonly onDidChangeTreeData?: vscode.Event<NugetPackage | null | undefined> | undefined = this._onDidChangeTreeData.event;
 
     constructor(private workspaceRoot: string) { }
 

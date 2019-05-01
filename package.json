@@ -42,12 +42,25 @@
           "light": "media/light/refresh.svg",
           "dark": "media/dark/refresh.svg"
         }
+      },
+      {
+        "command": "nuget-explorer.install",
+        "title": "NuGet: Install Package",
+        "icon": {
+          "light": "media/light/add.svg",
+          "dark": "media/dark/add.svg"
+        }
       }
     ],
     "menus": {
       "view/title": [
         {
           "command": "nuget-explorer.refresh",
+          "when": "view == nuget-installed",
+          "group": "navigation"
+        },
+        {
+          "command": "nuget-explorer.install",
           "when": "view == nuget-installed",
           "group": "navigation"
         }
@@ -70,6 +83,7 @@
     "vscode": "^1.1.28"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "xmldom": "~0.1.27"
   }
 }
