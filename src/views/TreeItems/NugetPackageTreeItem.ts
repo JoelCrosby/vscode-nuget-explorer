@@ -25,7 +25,7 @@ export class NugetPackageTreeItem extends vscode.TreeItem {
 
     iconPath = this.getIcon();
 
-    contextValue = 'nugetPackage';
+    contextValue = this.getContextValue();
 
     private getIcon() {
         switch (this.type) {
@@ -35,6 +35,17 @@ export class NugetPackageTreeItem extends vscode.TreeItem {
                 return projectIcon;
             default:
                 return;
+        }
+    }
+
+    private getContextValue() {
+        switch (this.type) {
+            case TreeItemType.package:
+                return 'package';
+            case TreeItemType.workspace:
+                return 'workspace';
+            default:
+                return 'default';
         }
     }
 }

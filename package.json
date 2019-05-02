@@ -84,7 +84,7 @@
       "view/item/context": [
         {
           "command": "nuget-explorer.uninstall",
-          "when": "view == nuget-installed && viewItem == nugetPackage"
+          "when": "view == nuget-installed && viewItem == package"
         }
       ]
     }
