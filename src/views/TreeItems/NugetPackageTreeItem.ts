@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 
 import { WorkspaceManager } from '../../manager/WorkspaceManager';
 import { packageIcon, projectIcon } from '../Icons';
+import { NugetPackage } from '../../models/NugetPackage';
 
 export class NugetPackageTreeItem extends vscode.TreeItem {
 
@@ -10,16 +11,23 @@ export class NugetPackageTreeItem extends vscode.TreeItem {
         private version: string,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly type = TreeItemType.package,
-        public readonly manager: WorkspaceManager) {
+        public readonly manager: WorkspaceManager,
+        public readonly nugetPackage?: NugetPackage) {
 
         super(label, collapsibleState);
     }
 
     get tooltip(): string {
+        if (this.nugetPackage && this.nugetPackage.latestVersion()) {
+            return `${this.version} (Update available -> ${this.nugetPackage.latestVersion()})`;
+        }
         return `${this.label}-${this.version}`;
     }
 
     get description(): string {
+        if (this.nugetPackage && this.nugetPackage.latestVersion()) {
+            return `${this.version} -> ${this.nugetPackage.latestVersion()}`;
+        }
         return this.version;
     }
 

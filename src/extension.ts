@@ -8,6 +8,7 @@ import { WorkspaceManager } from './manager/WorkspaceManager';
 import { searchService } from './NugetApi/SearchService';
 import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
 import { ShowProgressPopup } from './utils';
+import { updateService } from './NugetApi/UpdateService';
 
 
 export function activate(context: vscode.ExtensionContext) {
@@ -37,6 +38,7 @@ export class ExtensionManager {
                 this.installedPackagesView
             );
             this.workspaceManagers.push(new WorkspaceManager(worksapce, resolver, nugetManager));
+            this.workspaceManagers.forEach(manager => manager.refresh());
         });
 
         // Only show NuGet View Container if any workspace contains a valid project file
@@ -53,9 +55,31 @@ export class ExtensionManager {
         vscode.window.registerTreeDataProvider('nuget-installed', this.installedPackagesView);
 
         vscode.commands.registerCommand('nuget-explorer.refresh', () => this.installedPackagesView.refresh());
+        vscode.commands.registerCommand('nuget-explorer.check-for-updates', (item: NugetPackageTreeItem) => this.checkForUpdates(item));
         vscode.commands.registerCommand('nuget-explorer.install', (item: NugetPackageTreeItem) => this.managePackageInstall(item));
         vscode.commands.registerCommand('nuget-explorer.uninstall', (item: NugetPackageTreeItem) => item.manager.nugetManager.uninstall(item));
 
+    }
+
+    async checkForUpdates(item?: NugetPackageTreeItem) {
+
+        await ShowProgressPopup('NuGet checking for updates', async () => {
+            const updateTasks: Promise<string[] | undefined>[] = [];
+
+            this.workspaceManagers.forEach(manager => {
+                manager.packages.forEach(nugetPackage => {
+                    updateTasks.push(updateService.checkForUpdates(nugetPackage));
+                });
+            });
+
+            const results = await Promise.all(updateTasks);
+
+            if (results.length) {
+                vscode.window.showInformationMessage('NuGet package update(s) are available');
+            }
+
+            this.installedPackagesView.refresh();
+        });
     }
 
     async managePackageInstall(item?: NugetPackageTreeItem) {

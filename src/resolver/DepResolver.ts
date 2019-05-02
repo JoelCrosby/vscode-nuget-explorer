@@ -27,11 +27,11 @@ export class DepResolver {
 
         if (itemGroup.hasOwnProperty('PackageReference')) {
             itemGroup.PackageReference.forEach((ref: any) => {
-                pakages.push({
-                    id: ref.$.Include,
-                    name: ref.$.Include,
-                    version: ref.$.Version
-                });
+                pakages.push(new NugetPackage(
+                    ref.$.Include,
+                    ref.$.Include,
+                    ref.$.Version
+                ));
             });
         }
 

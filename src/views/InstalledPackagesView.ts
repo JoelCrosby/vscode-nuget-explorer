@@ -38,30 +38,27 @@ export class InstalledPackagesView implements vscode.TreeDataProvider<NugetPacka
     private getPackageTreeItems(element: NugetPackageTreeItem): vscode.ProviderResult<NugetPackageTreeItem[]> {
         if (!element.manager) { return []; }
 
-        return element.manager.resolver.getPackages()
+        if (element.manager.packages.length < 1) {
+            return [
+                new NugetPackageTreeItem(
+                    'No NuGet dependancies in this workspace',
+                    '',
+                    vscode.TreeItemCollapsibleState.None,
+                    TreeItemType.empty,
+                    element.manager
+                ),
+            ];
+        }
 
-            .then((packages) => {
-
-                if (packages.length < 1) {
-                    return [
-                        new NugetPackageTreeItem(
-                            'No NuGet dependancies in this workspace',
-                            '',
-                            vscode.TreeItemCollapsibleState.None,
-                            TreeItemType.empty,
-                            element.manager
-                        ),
-                    ];
-                }
-
-                return packages.map(item =>
-                    new NugetPackageTreeItem(
-                        item.name,
-                        item.version,
-                        vscode.TreeItemCollapsibleState.None,
-                        TreeItemType.package,
-                        element.manager
-                    ));
-            });
+        return element.manager.packages.map(item =>
+            new NugetPackageTreeItem(
+                item.name,
+                item.version,
+                vscode.TreeItemCollapsibleState.None,
+                TreeItemType.package,
+                element.manager,
+                item,
+            )
+        );
     }
 }

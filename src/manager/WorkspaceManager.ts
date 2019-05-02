@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import { PackageResolver } from "../resolver/PackageResolver";
 import { NugetManager } from "./NugetManager";
 import { QuickPickItem } from "vscode";
+import { NugetPackage } from '../models/NugetPackage';
 
 export class WorkspaceManager implements QuickPickItem {
 
@@ -14,12 +15,15 @@ export class WorkspaceManager implements QuickPickItem {
     picked?: boolean;
     alwaysShow?: boolean;
 
+    packages: NugetPackage[] = [];
+
     constructor(
         public workspaceFolder: vscode.WorkspaceFolder,
         public resolver: PackageResolver,
-        public nugetManager: NugetManager) {
+        public nugetManager: NugetManager) { }
 
-
+    async refresh() {
+        this.packages = await this.resolver.getPackages();
     }
 
 }
