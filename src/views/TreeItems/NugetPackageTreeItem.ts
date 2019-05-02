@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 import { WorkspaceManager } from '../../manager/WorkspaceManager';
-import { packageIcon, projectIcon } from '../Icons';
+import { packageIcon, projectIcon, packageUpdateIcon } from '../Icons';
 import { NugetPackage } from '../../models/NugetPackage';
 
 export class NugetPackageTreeItem extends vscode.TreeItem {
@@ -17,9 +17,13 @@ export class NugetPackageTreeItem extends vscode.TreeItem {
         super(label, collapsibleState);
     }
 
+    get updateAvailable() {
+        return this.nugetPackage && this.nugetPackage.latestVersion();
+    }
+
     get tooltip(): string {
-        if (this.nugetPackage && this.nugetPackage.latestVersion()) {
-            return `${this.version} (Update available -> ${this.nugetPackage.latestVersion()})`;
+        if (this.nugetPackage && this.updateAvailable) {
+            return `${this.label}-${this.version} (Update available -> ${this.nugetPackage.latestVersion()})`;
         }
         return `${this.label}-${this.version}`;
     }
@@ -38,7 +42,7 @@ export class NugetPackageTreeItem extends vscode.TreeItem {
     private getIcon() {
         switch (this.type) {
             case TreeItemType.package:
-                return packageIcon;
+                return this.updateAvailable ? packageUpdateIcon : packageIcon;
             case TreeItemType.workspace:
                 return projectIcon;
             default:
