@@ -8,10 +8,12 @@ import { DepResolver } from './DepResolver';
 
 export class PackageResolver {
 
+    public isValidWorkspace = () => this.resolveProjectFile();
+
     constructor(private workspaceRoot: string) { }
 
     async getPackages(): Promise<NugetPackage[]> {
-        const projectFile = this.resolveProjectFile(this.workspaceRoot);
+        const projectFile = this.resolveProjectFile();
         const projectFilePath = path.join(this.workspaceRoot, projectFile);
 
         if (this.pathExists(projectFilePath)) {
@@ -23,9 +25,9 @@ export class PackageResolver {
         }
     }
 
-    private resolveProjectFile(root: string): string {
+    private resolveProjectFile(): string {
 
-        const files = fs.readdirSync(root);
+        const files = fs.readdirSync(this.workspaceRoot);
         const projExpr = /([a-zA-Z0-9\s_\\.\-\(\):])+(.csproj)$/g;
 
         let projectFile = '';

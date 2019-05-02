@@ -48,7 +48,8 @@ export class InstalledPackagesView implements vscode.TreeDataProvider<NugetPacka
                             'No NuGet dependancies in this workspace',
                             '',
                             vscode.TreeItemCollapsibleState.None,
-                            TreeItemType.empty
+                            TreeItemType.empty,
+                            element.manager
                         ),
                     ];
                 }

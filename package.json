@@ -23,7 +23,7 @@
     "dotnetcore"
   ],
   "activationEvents": [
-    "workspaceContains:*.csproj"
+    "workspaceContains:**/*.csproj"
   ],
   "main": "./out/extension.js",
   "contributes": {

@@ -5,46 +5,87 @@ import { NugetManager } from './manager/NugetManager';
 import { DotnetManager } from './manager/DotnetManager';
 import { PackageResolver } from './resolver/PackageResolver';
 import { WorkspaceManager } from './manager/WorkspaceManager';
+import { searchService } from './NugetApi/SearchService';
+import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
+import { ShowProgressPopup } from './utils';
+
 
 export function activate(context: vscode.ExtensionContext) {
+    extensionManager.start();
+}
 
-  vscode.commands.executeCommand('setContext', 'inDotnetProject', true);
+export class ExtensionManager {
 
-  const workspaces = vscode.workspace.workspaceFolders;
+    outputChannel = vscode.window.createOutputChannel('NuGet');
 
-  if (!workspaces || workspaces.length < 1) {
-    vscode.window.showInformationMessage('No dependency in empty workspace');
-    return Promise.resolve([]);
-  }
+    workspaces = vscode.workspace.workspaceFolders;
+    workspaceManagers: WorkspaceManager[] = [];
 
-  const dotnetManager = new DotnetManager(vscode.window.createOutputChannel('NuGet'));
-  const workspaceManagers: WorkspaceManager[] = [];
-  const installedPackagesView = new InstalledPackagesView(workspaceManagers);
+    installedPackagesView = new InstalledPackagesView(this.workspaceManagers);
 
-  workspaces.forEach((worksapce: vscode.WorkspaceFolder) => {
-    const resolver = new PackageResolver(worksapce.uri.fsPath);
-    const nugetManager = new NugetManager(dotnetManager, installedPackagesView);
+    start() {
 
-    workspaceManagers.push(new WorkspaceManager(worksapce.name, resolver, nugetManager));
-  });
+        if (!this.workspaces || this.workspaces.length < 1) {
+            vscode.window.showInformationMessage('No dependency in empty workspace');
+            return Promise.resolve([]);
+        }
 
-  vscode.window.registerTreeDataProvider('nuget-installed', installedPackagesView);
+        this.workspaces.forEach((worksapce: vscode.WorkspaceFolder) => {
+            const resolver = new PackageResolver(worksapce.uri.fsPath);
+            const nugetManager = new NugetManager(
+                new DotnetManager(this.outputChannel, worksapce),
+                this.installedPackagesView
+            );
+            this.workspaceManagers.push(new WorkspaceManager(worksapce, resolver, nugetManager));
+        });
 
-  const selectedWorksapceManager = workspaceManagers[0];
+        // Only show NuGet View Container if any workspace contains a valid project file
+        if (this.workspaceManagers.filter(manager => manager.resolver.isValidWorkspace()).length) {
+            this.registerViewAndCommands();
+        }
+    }
 
-  vscode.commands.registerCommand('nuget-explorer.refresh',
-    () => installedPackagesView.refresh());
+    registerViewAndCommands() {
 
-  vscode.commands.registerCommand('nuget-explorer.install',
-    () => selectedWorksapceManager.nugetManager.install());
+        // Set context to enable activity bar view container.
+        vscode.commands.executeCommand('setContext', 'inDotnetProject', true);
 
-  vscode.commands.registerCommand('nuget-explorer.uninstall',
-    (item) => selectedWorksapceManager.nugetManager.uninstall(item));
+        vscode.window.registerTreeDataProvider('nuget-installed', this.installedPackagesView);
 
+        vscode.commands.registerCommand('nuget-explorer.refresh', () => this.installedPackagesView.refresh());
+        vscode.commands.registerCommand('nuget-explorer.install', () => this.managePackageInstall());
+        vscode.commands.registerCommand('nuget-explorer.uninstall', (item: NugetPackageTreeItem) => item.manager.nugetManager.uninstall(item));
+
+    }
+
+    async managePackageInstall() {
+
+        const packages = await searchService.search();
+
+        if (!packages) { return; }
+
+        if (this.workspaceManagers.length === 1) {
+            await ShowProgressPopup('NuGet Installing Packages', () => this.workspaceManagers[0].nugetManager.installPackages(packages));
+        } else {
+            const selected = await vscode.window.showQuickPick<WorkspaceManager>(
+                this.workspaceManagers, { canPickMany: true, placeHolder: 'Select Projects' });
+
+            if (selected && selected.length) {
+                await ShowProgressPopup('NuGet Installing Packages', async () => {
+                    const installQueue: Promise<void>[] = [];
+                    selected.forEach(manager => installQueue.push(manager.nugetManager.installPackages(packages)));
+                    await Promise.all(installQueue);
+                });
+            }
+        }
+
+        vscode.window.showInformationMessage('NuGet Package(s) installed');
+        this.installedPackagesView.refresh();
+    }
 }
 
 export function deactivate() {
-  vscode.commands.executeCommand('setContext', 'inDotnetProject', false);
+    vscode.commands.executeCommand('setContext', 'inDotnetProject', false);
 }
 
-
+export const extensionManager = new ExtensionManager();

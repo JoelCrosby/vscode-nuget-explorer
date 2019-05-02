@@ -1,21 +1,18 @@
 import * as vscode from 'vscode';
-import * as process from 'process';
 
 import { spawn } from 'child_process';
+import { PackageResolver } from '../resolver/PackageResolver';
 
 export class DotnetManager {
 
-    constructor(private output: vscode.OutputChannel) { }
+    constructor(private output: vscode.OutputChannel, private workspaceFolder: vscode.WorkspaceFolder) { }
 
     async execute(commands: string[]): Promise<void> {
         return new Promise((resolve, reject) => {
 
-            if (!vscode.workspace.rootPath) { return reject(); }
+            if (!this.workspaceFolder.uri.fsPath) { return reject(); }
 
-            const returnWd = process.cwd();
-            process.chdir(vscode.workspace.rootPath);
-
-            const dotnet = spawn('dotnet', commands);
+            const dotnet = spawn('dotnet', commands, { cwd: this.workspaceFolder.uri.fsPath });
 
             dotnet.stdout.setEncoding('utf8');
 
@@ -25,12 +22,10 @@ export class DotnetManager {
 
             dotnet.stdout.on('error', (err: Error) => {
                 this.output.appendLine(err.message);
-                process.chdir(returnWd);
                 reject();
             });
 
             dotnet.on('close', (code) => {
-                process.chdir(returnWd);
                 resolve();
             });
         });

@@ -10,7 +10,7 @@ export class NugetPackageTreeItem extends vscode.TreeItem {
         private version: string,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly type = TreeItemType.package,
-        public readonly manager?: WorkspaceManager) {
+        public readonly manager: WorkspaceManager) {
 
         super(label, collapsibleState);
     }
