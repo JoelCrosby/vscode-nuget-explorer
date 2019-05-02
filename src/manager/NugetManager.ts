@@ -28,21 +28,7 @@ export class NugetManager {
     }
 
     async uninstall(nugetPackage: NugetPackageTreeItem) {
-
-        if (!nugetPackage) { return; }
-
-        await vscode.window.withProgress({
-            location: vscode.ProgressLocation.Notification,
-            title: "NuGet Removing Package " + nugetPackage.label,
-            cancellable: false
-        }, async () => {
-
-            await this.dotnetManager.execute(['remove', 'package', nugetPackage.label]);
-
-            vscode.window.showInformationMessage(`NuGet Package ${nugetPackage.label} Removed`);
-
-            this.installedPackages.refresh();
-        });
+        await this.dotnetManager.execute(['remove', 'package', nugetPackage.label]);
     }
 
 }

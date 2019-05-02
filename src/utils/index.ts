@@ -4,11 +4,15 @@ export function isArray(o: any) {
     return Object.prototype.toString.apply(o) === '[object Array]';
 }
 
-export async function ShowProgressPopup(message: string, task: () => Promise<void>): Promise<void> {
+export async function showProgressPopup(message: string, task: () => Promise<void>): Promise<void> {
     await vscode.window.withProgress({
         location: vscode.ProgressLocation.Notification,
         title: message,
         cancellable: false
     }, async () => await task());
+}
+
+export function showMessage(message: string): void {
+    vscode.window.showInformationMessage(message);
 }
 
