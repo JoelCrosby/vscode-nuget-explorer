@@ -53,18 +53,20 @@ export class ExtensionManager {
         vscode.window.registerTreeDataProvider('nuget-installed', this.installedPackagesView);
 
         vscode.commands.registerCommand('nuget-explorer.refresh', () => this.installedPackagesView.refresh());
-        vscode.commands.registerCommand('nuget-explorer.install', () => this.managePackageInstall());
+        vscode.commands.registerCommand('nuget-explorer.install', (item: NugetPackageTreeItem) => this.managePackageInstall(item));
         vscode.commands.registerCommand('nuget-explorer.uninstall', (item: NugetPackageTreeItem) => item.manager.nugetManager.uninstall(item));
 
     }
 
-    async managePackageInstall() {
+    async managePackageInstall(item?: NugetPackageTreeItem) {
 
         const packages = await searchService.search();
 
         if (!packages) { return; }
 
-        if (this.workspaceManagers.length === 1) {
+        if (item) {
+            await ShowProgressPopup('NuGet Installing Packages', () => item.manager.nugetManager.installPackages(packages));
+        } else if (this.workspaceManagers.length === 1) {
             await ShowProgressPopup('NuGet Installing Packages', () => this.workspaceManagers[0].nugetManager.installPackages(packages));
         } else {
             const selected = await vscode.window.showQuickPick<WorkspaceManager>(
