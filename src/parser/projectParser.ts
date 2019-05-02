@@ -6,7 +6,7 @@ export class ProjectParser {
 
     private parser: xml2js.Parser = new xml2js.Parser();
 
-    constructor(private xml: string, private arrayTags: any) { }
+    constructor(private xml: string) { }
 
     parse(): Promise<ProjectTree | undefined> {
 

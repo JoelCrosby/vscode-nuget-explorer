@@ -45,7 +45,7 @@ export class PackageResolver {
 
         const projectFileString = fs.readFileSync(projectFilePath).toString();
 
-        const parser = new ProjectParser(projectFileString, []);
+        const parser = new ProjectParser(projectFileString);
         const projectTree = await parser.parse();
 
         if (!projectTree) { return []; }
