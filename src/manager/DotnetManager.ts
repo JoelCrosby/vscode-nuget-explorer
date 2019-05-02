@@ -10,7 +10,7 @@ export class DotnetManager {
     async execute(commands: string[]): Promise<void> {
         return new Promise((resolve, reject) => {
 
-            if (!vscode.workspace.rootPath) { return; }
+            if (!vscode.workspace.rootPath) { return reject(); }
 
             const returnWd = process.cwd();
             process.chdir(vscode.workspace.rootPath);
