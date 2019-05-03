@@ -2,13 +2,16 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 import { NugetPackage } from '../models/NugetPackage';
-import { ProjectParser } from '../parser/ProjectParser';
+import { XMLParser } from '../parser/XMLParser';
 import { DepResolver } from './DepResolver';
 import { showMessage } from '../utils';
+import { ProjectParser } from '../parser/ProjectParser';
 
 export class PackageResolver {
 
     public isValidWorkspace = () => this.resolveProjectFile();
+
+    private parser: ProjectParser = new XMLParser();
 
     constructor(private workspaceRoot: string) { }
 
@@ -46,9 +49,7 @@ export class PackageResolver {
         if (!this.pathExists(projectFilePath)) { return []; }
 
         const projectFileString = fs.readFileSync(projectFilePath).toString();
-
-        const parser = new ProjectParser(projectFileString);
-        const projectTree = await parser.parse();
+        const projectTree = await this.parser.parse(projectFileString);
 
         if (!projectTree) { return []; }
 

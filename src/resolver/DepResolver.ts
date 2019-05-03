@@ -1,4 +1,4 @@
-import { ProjectTree } from "../parser/types/Project";
+import { ProjectTree } from "../parser/models/Project";
 import { NugetPackage } from "../models/NugetPackage";
 
 export class DepResolver {
