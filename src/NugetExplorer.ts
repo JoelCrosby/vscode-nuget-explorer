@@ -95,32 +95,35 @@ export class NugetExplorer {
     async managePackageUnInstall(item: NugetPackageTreeItem) {
 
         const unistallTasks: Promise<void>[] = [];
+        let progressMessage = 'NuGet Removing Packages';
+        let completionMessage = 'NuGet Packages Removed';
 
         if (!item) {
-            const packages = await this.promptSelectPackages('Select packages to remove');
-            packages.forEach(item => unistallTasks.push(item.manager.nugetManager.uninstall(item)));
+            const packages = await this.promptSelectPackages('Select packages to remove', 'Select Projects to remove packages from');
+            packages.forEach(nugetPackage => unistallTasks.push(nugetPackage.manager.nugetManager.uninstall(nugetPackage)));
         } else {
             if (item.nugetPackage) {
+                progressMessage = `NuGet Removing Package ${item.label}`;
+                completionMessage = `NuGet Package ${item.label} Removed`;
                 unistallTasks.push(item.manager.nugetManager.uninstall(item.nugetPackage));
             }
         }
 
-        showProgressPopup('NuGet Removing Package ' + item.label, async () => {
-
+        await showProgressPopup(progressMessage, async () => {
             await Promise.all(unistallTasks);
-
-            showMessage(`NuGet Package ${item.label} Removed`);
-            this.refresh();
         });
+
+        showMessage(completionMessage);
+        this.refresh();
     }
 
-    private async promptSelectPackages(prompt: string = 'Select Packages'): Promise<NugetPackage[]> {
+    private async promptSelectPackages(prompt: string = 'Select Packages', workspacesPrompt = 'Select Projects'): Promise<NugetPackage[]> {
         if (this.workspaceManagers.length === 1) {
             const selected = await showPickerView<NugetPackage>(this.workspaceManagers[0].packages, true, prompt);
             return selected || [];
         }
 
-        const selectedWorkspaces = await this.promptSelectWorkspaces();
+        const selectedWorkspaces = await this.promptSelectWorkspaces(workspacesPrompt);
         const packagesToSelect: NugetPackage[] = [];
 
 

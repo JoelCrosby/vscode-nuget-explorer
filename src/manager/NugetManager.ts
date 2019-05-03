@@ -26,7 +26,11 @@ export class NugetManager {
     }
 
     async uninstall(nugetPackage: NugetPackage) {
-        await this.dotnetManager.execute(['remove', 'package', nugetPackage.id]);
+        try {
+            await this.dotnetManager.execute(['remove', 'package', nugetPackage.id]);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
 }
