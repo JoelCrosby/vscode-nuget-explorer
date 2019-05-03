@@ -25,7 +25,7 @@
   "activationEvents": [
     "workspaceContains:**/*.csproj"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
@@ -116,6 +116,8 @@
   },
   "scripts": {
     "vscode:prepublish": "webpack --mode production",
+    "webpack": "webpack --mode development",
+    "webpack-dev": "webpack --mode development --watch",
     "compile": "webpack --mode none",
     "watch": "webpack --mode none --watch",
     "postinstall": "node ./node_modules/vscode/bin/install",
@@ -125,6 +127,8 @@
     "@types/mocha": "^2.2.42",
     "@types/node": "^10.12.21",
     "@types/xml2js": "^0.4.4",
+    "copy-webpack-plugin": "^5.0.3",
+    "file-loader": "^3.0.1",
     "ts-loader": "^5.4.5",
     "tslint": "^5.12.1",
     "typescript": "^3.3.1",
