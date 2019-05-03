@@ -60,6 +60,7 @@ export class ExtensionManager {
 
         vscode.commands.registerCommand('nuget-explorer.refresh', () => this.refresh());
         vscode.commands.registerCommand('nuget-explorer.check-for-updates', (item: NugetPackageTreeItem) => this.checkForUpdates(item));
+        vscode.commands.registerCommand('nuget-explorer.check-for-updates-all', () => this.checkForUpdatesAll());
         vscode.commands.registerCommand('nuget-explorer.install', (item: NugetPackageTreeItem) => this.managePackageInstall(item));
         vscode.commands.registerCommand('nuget-explorer.uninstall', (item: NugetPackageTreeItem) => this.managePackageUnInstall(item));
 
@@ -72,10 +73,28 @@ export class ExtensionManager {
         this.installedPackagesView.refresh();
     }
 
-    async checkForUpdates(item?: NugetPackageTreeItem) {
+    async checkForUpdates(item: NugetPackageTreeItem) {
 
         await showProgressPopup('NuGet checking for package updates', async () => {
-            const updateTasks: Promise<string[] | undefined>[] = [];
+
+            if (!item.nugetPackage) { return; }
+
+            const result = await updateService.checkForUpdates(item.nugetPackage);
+
+            if (result.length) {
+                showMessage('NuGet package update available');
+            } else {
+                showMessage('NuGet package up to date');
+            }
+
+            this.installedPackagesView.refresh();
+        });
+    }
+
+    async checkForUpdatesAll() {
+
+        await showProgressPopup('NuGet checking for package updates', async () => {
+            const updateTasks: Promise<string[]>[] = [];
 
             this.workspaceManagers.forEach(manager => {
                 manager.packages.forEach(nugetPackage => {
@@ -85,7 +104,7 @@ export class ExtensionManager {
 
             const results = await Promise.all(updateTasks);
 
-            if (results.filter(result => result && result.length).length) {
+            if (results.filter(result => result.length).length) {
                 showMessage('NuGet package updates are available');
             } else {
                 showMessage('NuGet All packages up to date');

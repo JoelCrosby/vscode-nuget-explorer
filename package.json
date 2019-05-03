@@ -56,7 +56,7 @@
         }
       },
       {
-        "command": "nuget-explorer.check-for-updates",
+        "command": "nuget-explorer.check-for-updates-all",
         "title": "NuGet: Check for updates",
         "icon": {
           "light": "resources/light/update.svg",
@@ -74,6 +74,10 @@
       {
         "command": "nuget-explorer.uninstall",
         "title": "Remove Package"
+      },
+      {
+        "command": "nuget-explorer.check-for-updates",
+        "title": "NuGet: Check for updates"
       }
     ],
     "menus": {
@@ -89,7 +93,7 @@
           "group": "navigation"
         },
         {
-          "command": "nuget-explorer.check-for-updates",
+          "command": "nuget-explorer.check-for-updates-all",
           "when": "view == nuget-installed",
           "group": "navigation"
         }
@@ -102,6 +106,10 @@
         {
           "command": "nuget-explorer.uninstall",
           "when": "view == nuget-installed && viewItem == package"
+        },
+        {
+            "command": "nuget-explorer.check-for-updates",
+            "when": "view == nuget-installed && viewItem == package"
         }
       ]
     }
