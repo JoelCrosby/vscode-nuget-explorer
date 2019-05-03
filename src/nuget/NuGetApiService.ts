@@ -1,7 +1,8 @@
 import Axios from 'axios';
 
-import { SearchResult } from "./SearchResult";
+
 import { showMessage } from '../utils';
+import { SearchResult } from './SearchResult';
 
 class NugetApiService {
 
