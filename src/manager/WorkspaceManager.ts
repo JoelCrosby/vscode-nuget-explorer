@@ -20,7 +20,13 @@ export class WorkspaceManager implements QuickPickItem {
         public nugetManager: NugetManager) { }
 
     async refresh() {
-        this.packages = await this.resolver.getPackages();
+        const deps = await this.resolver.getPackages();
+        this.packages = deps.map(dep => new NugetPackage(
+            dep.name,
+            dep.name,
+            dep.version,
+            this
+        ));
     }
 
 }

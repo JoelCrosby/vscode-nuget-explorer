@@ -3,10 +3,10 @@ import { NugetPackage } from "../models/NugetPackage";
 
 export class DepResolver {
 
-    static resolve(project: ProjectTree): NugetPackage[] {
+    static resolve(project: ProjectTree): ProjectDependacy[] {
         if (!project.ItemGroup) { return []; }
 
-        const packages: NugetPackage[] = [];
+        const packages: ProjectDependacy[] = [];
 
         if (Array.isArray(project.ItemGroup)) {
             project.ItemGroup.forEach(itemGroup => {
@@ -21,20 +21,24 @@ export class DepResolver {
         return packages;
     }
 
-    private static getPackages(itemGroup: any): NugetPackage[] {
+    private static getPackages(itemGroup: any): ProjectDependacy[] {
 
-        const pakages: NugetPackage[] = [];
+        const pakages: ProjectDependacy[] = [];
 
         if (itemGroup.hasOwnProperty('PackageReference')) {
             itemGroup.PackageReference.forEach((ref: any) => {
-                pakages.push(new NugetPackage(
-                    ref.$.Include,
-                    ref.$.Include,
-                    ref.$.Version
-                ));
+                pakages.push({
+                    name: ref.$.Include,
+                    version: ref.$.Version,
+                });
             });
         }
 
         return pakages;
     }
+}
+
+export interface ProjectDependacy {
+    name: string;
+    version: string;
 }

@@ -1,9 +1,8 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { NugetPackage } from '../models/NugetPackage';
 import { XMLParser } from '../parser/XMLParser';
-import { DepResolver } from './DepResolver';
+import { DepResolver, ProjectDependacy } from './DepResolver';
 import { showMessage } from '../utils';
 import { ProjectParser } from '../parser/ProjectParser';
 
@@ -15,7 +14,7 @@ export class PackageResolver {
 
     constructor(private workspaceRoot: string) { }
 
-    async getPackages(): Promise<NugetPackage[]> {
+    async getPackages(): Promise<ProjectDependacy[]> {
         const projectFile = this.resolveProjectFile();
         const projectFilePath = path.join(this.workspaceRoot, projectFile);
 
@@ -44,7 +43,7 @@ export class PackageResolver {
         return projectFile;
     }
 
-    private async getDepsInProjectFile(projectFilePath: string): Promise<NugetPackage[]> {
+    private async getDepsInProjectFile(projectFilePath: string): Promise<ProjectDependacy[]> {
 
         if (!this.pathExists(projectFilePath)) { return []; }
 

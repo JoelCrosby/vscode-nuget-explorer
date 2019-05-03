@@ -57,7 +57,7 @@
       },
       {
         "command": "nuget-explorer.check-for-updates-all",
-        "title": "NuGet: Check for updates",
+        "title": "NuGet: Check all packages for updates",
         "icon": {
           "light": "resources/light/update.svg",
           "dark": "resources/dark/update.svg"

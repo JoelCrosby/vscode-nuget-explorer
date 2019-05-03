@@ -1,6 +1,6 @@
 import { DotnetManager } from './DotnetManager';
 import { InstalledPackagesView } from '../views/InstalledPackagesView';
-import { NugetPackageTreeItem } from '../views/TreeItems/NugetPackageTreeItem';
+import { NugetPackage } from '../models/NugetPackage';
 
 export class NugetManager {
 
@@ -25,8 +25,8 @@ export class NugetManager {
         }
     }
 
-    async uninstall(nugetPackage: NugetPackageTreeItem) {
-        await this.dotnetManager.execute(['remove', 'package', nugetPackage.label]);
+    async uninstall(nugetPackage: NugetPackage) {
+        await this.dotnetManager.execute(['remove', 'package', nugetPackage.id]);
     }
 
 }

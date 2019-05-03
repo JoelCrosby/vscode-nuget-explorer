@@ -3,6 +3,7 @@ import { NugetPackageTreeItem } from "./views/TreeItems/NugetPackageTreeItem";
 import { showProgressPopup, showMessage, showPickerView } from "./utils";
 import { updateService } from "./nuget/UpdateService";
 import { searchService } from "./nuget/SearchService";
+import { NugetPackage } from "./models/NugetPackage";
 
 export class NugetExplorer {
 
@@ -76,8 +77,7 @@ export class NugetExplorer {
 
         } else {
 
-            const selected = await showPickerView<WorkspaceManager>
-                (this.workspaceManagers, true, 'Select Projects');
+            const selected = await this.promptSelectWorkspaces();
 
             if (selected && selected.length) {
                 await showProgressPopup('NuGet Installing Packages', async () => {
@@ -93,11 +93,53 @@ export class NugetExplorer {
     }
 
     async managePackageUnInstall(item: NugetPackageTreeItem) {
+
+        const unistallTasks: Promise<void>[] = [];
+
+        if (!item) {
+            const packages = await this.promptSelectPackages('Select packages to remove');
+            packages.forEach(item => unistallTasks.push(item.manager.nugetManager.uninstall(item)));
+        } else {
+            if (item.nugetPackage) {
+                unistallTasks.push(item.manager.nugetManager.uninstall(item.nugetPackage));
+            }
+        }
+
         showProgressPopup('NuGet Removing Package ' + item.label, async () => {
-            await item.manager.nugetManager.uninstall(item);
+
+            await Promise.all(unistallTasks);
+
             showMessage(`NuGet Package ${item.label} Removed`);
             this.refresh();
         });
+    }
+
+    private async promptSelectPackages(prompt: string = 'Select Packages'): Promise<NugetPackage[]> {
+        if (this.workspaceManagers.length === 1) {
+            const selected = await showPickerView<NugetPackage>(this.workspaceManagers[0].packages, true, prompt);
+            return selected || [];
+        }
+
+        const selectedWorkspaces = await this.promptSelectWorkspaces();
+        const packagesToSelect: NugetPackage[] = [];
+
+
+        selectedWorkspaces.forEach(workspace => {
+            if (selectedWorkspaces.length > 1) {
+                workspace.packages.forEach(item => item.projectName = workspace.name);
+            }
+            packagesToSelect.push(...workspace.packages);
+        });
+
+        const selected = await showPickerView<NugetPackage>(packagesToSelect, true, prompt);
+        return selected || [];
+    }
+
+    private async promptSelectWorkspaces(prompt: string = 'Select Projects'): Promise<WorkspaceManager[]> {
+        const selected = await showPickerView<WorkspaceManager>
+            (this.workspaceManagers, true, prompt);
+
+        return selected || [];
     }
 
 }
