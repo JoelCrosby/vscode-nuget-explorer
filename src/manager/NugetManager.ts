@@ -1,5 +1,3 @@
-import * as vscode from 'vscode';
-
 import { DotnetManager } from './DotnetManager';
 import { InstalledPackagesView } from '../views/InstalledPackagesView';
 import { NugetPackageTreeItem } from '../views/TreeItems/NugetPackageTreeItem';

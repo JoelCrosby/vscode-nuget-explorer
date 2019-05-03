@@ -1,11 +1,10 @@
-import * as vscode from 'vscode';
 import { nugetApiService } from './NuGetApiService';
+import { showInputBox, showPickerView, PickerViewItem } from '../utils';
 
 class SearchService {
 
     async search(): Promise<string[] | undefined> {
-        const query = await vscode.window.showInputBox(
-            { prompt: 'Search the NuGet Gallery for Pacakages', placeHolder: 'Search for Pacakges' });
+        const query = await showInputBox('Search the NuGet Gallery for Pacakages', 'Search for Pacakges');
 
         if (!query) { return; }
 
@@ -13,12 +12,18 @@ class SearchService {
 
         if (!results) { return; }
 
-        const options = results.data.map(result => result.id);
+        const options = results.data.map(result => {
+            return {
+                label: result.id,
+                description: result.id,
+            };
+        });
 
-        const selectedOptions = await vscode.window.showQuickPick(options,
-            { canPickMany: true, placeHolder: 'Select Packages' });
+        const selectedOptions = await showPickerView<PickerViewItem>(options, true, 'Select Packages');
 
-        return selectedOptions;
+        if (!selectedOptions) { return []; }
+
+        return selectedOptions.map(item => item.label);
     }
 }
 

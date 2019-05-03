@@ -1,5 +1,3 @@
-import * as vscode from 'vscode';
-
 import { PackageResolver } from "../resolver/PackageResolver";
 import { NugetManager } from "./NugetManager";
 import { QuickPickItem } from "vscode";
@@ -7,8 +5,7 @@ import { NugetPackage } from '../models/NugetPackage';
 
 export class WorkspaceManager implements QuickPickItem {
 
-    get name(): string { return this.workspaceFolder.name; }
-    get label(): string { return this.workspaceFolder.name; }
+    get label(): string { return this.name; }
 
     description?: string;
     detail?: string;
@@ -18,7 +15,7 @@ export class WorkspaceManager implements QuickPickItem {
     packages: NugetPackage[] = [];
 
     constructor(
-        public workspaceFolder: vscode.WorkspaceFolder,
+        public name: string,
         public resolver: PackageResolver,
         public nugetManager: NugetManager) { }
 

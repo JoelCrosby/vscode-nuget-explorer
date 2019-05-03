@@ -1,15 +1,13 @@
 import * as vscode from 'vscode';
 
-import { InstalledPackagesView } from './views/InstalledPackagesView';
-import { NugetManager } from './manager/NugetManager';
 import { DotnetManager } from './manager/DotnetManager';
-import { PackageResolver } from './resolver/PackageResolver';
+import { NugetManager } from './manager/NugetManager';
 import { WorkspaceManager } from './manager/WorkspaceManager';
-import { searchService } from './nuget/SearchService';
+import { NugetExplorer } from './NugetExplorer';
+import { PackageResolver } from './resolver/PackageResolver';
+import { showMessage } from './utils';
+import { InstalledPackagesView } from './views/InstalledPackagesView';
 import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
-import { showProgressPopup, showMessage } from './utils';
-import { updateService } from './nuget/UpdateService';
-
 
 export function activate(context: vscode.ExtensionContext) {
     extensionManager.start();
@@ -24,6 +22,8 @@ export class ExtensionManager {
 
     installedPackagesView = new InstalledPackagesView(this.workspaceManagers);
 
+    nugetExplorer = new NugetExplorer(this.workspaceManagers, this.installedPackagesView);
+
     start() {
 
         if (!this.workspaces || this.workspaces.length < 1) {
@@ -34,14 +34,14 @@ export class ExtensionManager {
         this.workspaces.forEach((worksapce: vscode.WorkspaceFolder) => {
             const resolver = new PackageResolver(worksapce.uri.fsPath);
             const nugetManager = new NugetManager(
-                new DotnetManager(this.outputChannel, worksapce),
+                new DotnetManager(this.outputChannel, worksapce.uri.fsPath),
                 this.installedPackagesView
             );
 
-            this.workspaceManagers.push(new WorkspaceManager(worksapce, resolver, nugetManager));
+            this.workspaceManagers.push(new WorkspaceManager(worksapce.name, resolver, nugetManager));
         });
 
-        this.refresh()
+        this.nugetExplorer.refresh()
             .then(() => {
                 // Only show NuGet View Container if any workspace contains a valid project file
                 if (this.workspaceManagers.filter(manager => manager.resolver.isValidWorkspace()).length) {
@@ -58,96 +58,27 @@ export class ExtensionManager {
 
         vscode.window.registerTreeDataProvider('nuget-installed', this.installedPackagesView);
 
-        vscode.commands.registerCommand('nuget-explorer.refresh', () => this.refresh());
-        vscode.commands.registerCommand('nuget-explorer.check-for-updates', (item: NugetPackageTreeItem) => this.checkForUpdates(item));
-        vscode.commands.registerCommand('nuget-explorer.check-for-updates-all', () => this.checkForUpdatesAll());
-        vscode.commands.registerCommand('nuget-explorer.install', (item: NugetPackageTreeItem) => this.managePackageInstall(item));
-        vscode.commands.registerCommand('nuget-explorer.uninstall', (item: NugetPackageTreeItem) => this.managePackageUnInstall(item));
+        vscode.commands.registerCommand('nuget-explorer.refresh', () => {
+            this.nugetExplorer.refresh();
+        });
 
-    }
+        vscode.commands.registerCommand('nuget-explorer.check-for-updates', (item: NugetPackageTreeItem) => {
+            this.nugetExplorer.checkForUpdates(item);
+        });
 
-    async refresh() {
-        const refreshTasks: Promise<void>[] = [];
-        this.workspaceManagers.forEach(manager => refreshTasks.push(manager.refresh()));
-        await Promise.all(refreshTasks);
-        this.installedPackagesView.refresh();
-    }
+        vscode.commands.registerCommand('nuget-explorer.check-for-updates-all', () => {
+            this.nugetExplorer.checkForUpdatesAll();
+        });
 
-    async checkForUpdates(item: NugetPackageTreeItem) {
+        vscode.commands.registerCommand('nuget-explorer.install', (item: NugetPackageTreeItem) => {
+            this.nugetExplorer.managePackageInstall(item);
+        });
 
-        await showProgressPopup('NuGet checking for package updates', async () => {
-
-            if (!item.nugetPackage) { return; }
-
-            const result = await updateService.checkForUpdates(item.nugetPackage);
-
-            if (result.length) {
-                showMessage('NuGet package update available');
-            } else {
-                showMessage('NuGet package up to date');
-            }
-
-            this.installedPackagesView.refresh();
+        vscode.commands.registerCommand('nuget-explorer.uninstall', (item: NugetPackageTreeItem) => {
+            this.nugetExplorer.managePackageUnInstall(item);
         });
     }
 
-    async checkForUpdatesAll() {
-
-        await showProgressPopup('NuGet checking for package updates', async () => {
-            const updateTasks: Promise<string[]>[] = [];
-
-            this.workspaceManagers.forEach(manager => {
-                manager.packages.forEach(nugetPackage => {
-                    updateTasks.push(updateService.checkForUpdates(nugetPackage));
-                });
-            });
-
-            const results = await Promise.all(updateTasks);
-
-            if (results.filter(result => result.length).length) {
-                showMessage('NuGet package updates are available');
-            } else {
-                showMessage('NuGet All packages up to date');
-            }
-
-            this.installedPackagesView.refresh();
-        });
-    }
-
-    async managePackageInstall(item?: NugetPackageTreeItem) {
-
-        const packages = await searchService.search();
-
-        if (!packages) { return; }
-
-        if (item) {
-            await showProgressPopup('NuGet Installing Packages', () => item.manager.nugetManager.installPackages(packages));
-        } else if (this.workspaceManagers.length === 1) {
-            await showProgressPopup('NuGet Installing Packages', () => this.workspaceManagers[0].nugetManager.installPackages(packages));
-        } else {
-            const selected = await vscode.window.showQuickPick<WorkspaceManager>(
-                this.workspaceManagers, { canPickMany: true, placeHolder: 'Select Projects' });
-
-            if (selected && selected.length) {
-                await showProgressPopup('NuGet Installing Packages', async () => {
-                    const installQueue: Promise<void>[] = [];
-                    selected.forEach(manager => installQueue.push(manager.nugetManager.installPackages(packages)));
-                    await Promise.all(installQueue);
-                });
-            }
-        }
-
-        showMessage('NuGet Package(s) installed');
-        this.refresh();
-    }
-
-    async managePackageUnInstall(item: NugetPackageTreeItem) {
-        showProgressPopup('NuGet Removing Package ' + item.label, async () => {
-            await item.manager.nugetManager.uninstall(item);
-            showMessage(`NuGet Package ${item.label} Removed`);
-            this.refresh();
-        });
-    }
 }
 
 export function deactivate() {

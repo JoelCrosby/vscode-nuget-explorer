@@ -73,7 +73,7 @@
       },
       {
         "command": "nuget-explorer.uninstall",
-        "title": "Remove Package"
+        "title": "NuGet: Remove Package"
       },
       {
         "command": "nuget-explorer.check-for-updates",
