@@ -51,7 +51,7 @@ export class ExtensionManager {
 
     }
 
-    registerViewAndCommands() {
+    private registerViewAndCommands() {
 
         // Set context to enable activity bar view container.
         vscode.commands.executeCommand('setContext', 'inDotnetProject', true);
