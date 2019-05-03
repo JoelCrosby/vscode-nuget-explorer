@@ -5,10 +5,10 @@ import { NugetManager } from './manager/NugetManager';
 import { DotnetManager } from './manager/DotnetManager';
 import { PackageResolver } from './resolver/PackageResolver';
 import { WorkspaceManager } from './manager/WorkspaceManager';
-import { searchService } from './NugetApi/SearchService';
+import { searchService } from './nuget/SearchService';
 import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
 import { showProgressPopup, showMessage } from './utils';
-import { updateService } from './NugetApi/UpdateService';
+import { updateService } from './nuget/UpdateService';
 
 
 export function activate(context: vscode.ExtensionContext) {

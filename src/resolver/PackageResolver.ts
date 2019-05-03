@@ -1,10 +1,10 @@
-import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 
 import { NugetPackage } from '../models/NugetPackage';
 import { ProjectParser } from '../parser/ProjectParser';
 import { DepResolver } from './DepResolver';
+import { showMessage } from '../utils';
 
 export class PackageResolver {
 
@@ -20,7 +20,7 @@ export class PackageResolver {
             const items = this.getDepsInProjectFile(projectFilePath);
             return await items;
         } else {
-            vscode.window.showInformationMessage('Workspace has no .csproj project file');
+            showMessage('Workspace has no .csproj project file');
             return [];
         }
     }

@@ -1,7 +1,7 @@
-import * as vscode from 'vscode';
 import Axios from 'axios';
 
 import { SearchResult } from "./SearchResult";
+import { showMessage } from '../utils';
 
 class NugetApiService {
 
@@ -11,7 +11,7 @@ class NugetApiService {
                 `https://api-v2v3search-0.nuget.org/query?q=${query}&prerelease=false`);
             return res.data;
         } catch (error) {
-            vscode.window.showInformationMessage('Unable to reach NuGet api');
+            showMessage('Unable to reach NuGet api');
             return;
         }
     }
