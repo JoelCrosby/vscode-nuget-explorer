@@ -95,6 +95,7 @@ export class NugetExplorer {
     async managePackageUnInstall(item: NugetPackageTreeItem) {
 
         const unistallTasks: Promise<void>[] = [];
+
         let progressMessage = 'NuGet Removing Packages';
         let completionMessage = 'NuGet Packages Removed';
 

@@ -7,7 +7,7 @@ export class NugetPackage {
     }
 
     get detail() {
-        return this.projectName
+        return this.projectName;
     }
 
     updates?: string[];
