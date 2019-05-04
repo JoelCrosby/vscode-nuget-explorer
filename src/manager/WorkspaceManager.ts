@@ -1,6 +1,6 @@
-import { PackageResolver } from "../resolver/PackageResolver";
-import { NugetManager } from "./NugetManager";
-import { QuickPickItem } from "vscode";
+import { PackageResolver } from '../resolver/PackageResolver';
+import { NugetManager } from './NugetManager';
+import { QuickPickItem } from 'vscode';
 import { NugetPackage } from '../models/NugetPackage';
 
 export class WorkspaceManager implements QuickPickItem {

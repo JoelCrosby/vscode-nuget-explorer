@@ -1,9 +1,9 @@
-import { WorkspaceManager } from "./manager/WorkspaceManager";
-import { NugetPackageTreeItem } from "./views/TreeItems/NugetPackageTreeItem";
-import { showProgressPopup, showMessage, showPickerView } from "./utils";
-import { updateService } from "./nuget/UpdateService";
-import { searchService } from "./nuget/SearchService";
-import { NugetPackage } from "./models/NugetPackage";
+import { WorkspaceManager } from './manager/WorkspaceManager';
+import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
+import { showProgressPopup, showMessage, showPickerView } from './utils';
+import { updateService } from './nuget/UpdateService';
+import { searchService } from './nuget/SearchService';
+import { NugetPackage } from './models/NugetPackage';
 
 export class NugetExplorer {
 

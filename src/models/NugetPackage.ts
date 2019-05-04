@@ -1,4 +1,4 @@
-import { WorkspaceManager } from "../manager/WorkspaceManager";
+import { WorkspaceManager } from '../manager/WorkspaceManager';
 
 export class NugetPackage {
 

@@ -1,5 +1,5 @@
-import { nugetApiService } from "./NuGetApiService";
-import { NugetPackage } from "../models/NugetPackage";
+import { nugetApiService } from './NuGetApiService';
+import { NugetPackage } from '../models/NugetPackage';
 
 class UpdateService {
 

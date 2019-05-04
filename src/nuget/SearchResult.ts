@@ -1,5 +1,5 @@
 export interface SearchResult {
-    "@context": Context;
+    '@context': Context;
     totalHits: number;
     lastReopen: string;
     index: string;
@@ -7,13 +7,13 @@ export interface SearchResult {
 }
 
 export interface Context {
-    "@vocab": string;
-    "@base": string;
+    '@vocab': string;
+    '@base': string;
 }
 
 export interface Datum {
-    "@id": string;
-    "@type": string;
+    '@id': string;
+    '@type': string;
     registration: string;
     id: string;
     version: string;
@@ -33,5 +33,5 @@ export interface Datum {
 export interface Version {
     version: string;
     downloads: number;
-    "@id": string;
+    '@id': string;
 }
