@@ -27,8 +27,7 @@ export class ExtensionManager {
     start() {
 
         if (!this.workspaces || this.workspaces.length < 1) {
-            showMessage('No dependency in empty workspace');
-            return Promise.resolve([]);
+            return showMessage('No dependency in empty workspace');
         }
 
         this.workspaces.forEach((worksapce: vscode.WorkspaceFolder) => {
