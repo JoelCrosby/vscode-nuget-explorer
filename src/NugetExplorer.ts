@@ -16,13 +16,13 @@ export class NugetExplorer {
         this.view.refresh();
     }
 
-    async checkForUpdates(item: NugetPackageTreeItem) {
+    async checkForUpdates(nugetPackage: NugetPackage) {
 
         await showProgressPopup('NuGet checking for package updates', async () => {
 
-            if (!item.nugetPackage) { return; }
+            if (!nugetPackage) { return; }
 
-            const result = await updateService.checkForUpdates(item.nugetPackage);
+            const result = await updateService.checkForUpdates(nugetPackage);
 
             if (result.length) {
                 showMessage('NuGet package update available');

@@ -63,7 +63,9 @@ export class ExtensionManager {
         });
 
         vscode.commands.registerCommand('nuget-explorer.check-for-updates', (item: NugetPackageTreeItem) => {
-            this.nugetExplorer.checkForUpdates(item);
+            if (item.nugetPackage) {
+                this.nugetExplorer.checkForUpdates(item.nugetPackage);
+            }
         });
 
         vscode.commands.registerCommand('nuget-explorer.check-for-updates-all', () => {

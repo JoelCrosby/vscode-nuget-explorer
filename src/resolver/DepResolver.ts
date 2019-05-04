@@ -1,10 +1,11 @@
-import { ProjectTree } from "../parser/models/Project";
-import { NugetPackage } from "../models/NugetPackage";
+import { ProjectTree } from '../parser/models/Project';
 
 export class DepResolver {
 
     static resolve(project: ProjectTree): ProjectDependacy[] {
-        if (!project.ItemGroup) { return []; }
+        if (!project.ItemGroup) {
+            return [];
+        }
 
         const packages: ProjectDependacy[] = [];
 
@@ -22,7 +23,6 @@ export class DepResolver {
     }
 
     private static getPackages(itemGroup: any): ProjectDependacy[] {
-
         const pakages: ProjectDependacy[] = [];
 
         if (itemGroup.hasOwnProperty('PackageReference')) {
