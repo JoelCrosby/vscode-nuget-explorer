@@ -15,8 +15,9 @@ class SearchService {
         const options = results.data.map(result => {
             return {
                 label: result.id,
-                description: result.id,
-            };
+                description: result.version,
+                detail: result.description
+            } as PickerViewItem;
         });
 
         const selectedOptions = await showPickerView<PickerViewItem>(options, true, 'Select Packages');
