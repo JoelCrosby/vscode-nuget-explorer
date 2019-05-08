@@ -1,9 +1,5 @@
 import * as vscode from 'vscode';
 
-export function isArray(o: any) {
-    return Object.prototype.toString.apply(o) === '[object Array]';
-}
-
 export async function showProgressPopup(message: string, task: () => Promise<void>): Promise<void> {
     await vscode.window.withProgress({
         location: vscode.ProgressLocation.Notification,
@@ -14,6 +10,10 @@ export async function showProgressPopup(message: string, task: () => Promise<voi
 
 export function showMessage(message: string): void {
     vscode.window.showInformationMessage(message);
+}
+
+export function showErrorMessage(message: string): void {
+    vscode.window.showErrorMessage(message);
 }
 
 export function showPickerView<T extends PickerViewItem>(items: Array<T>, canPickManay: boolean, placeholder: string) {
