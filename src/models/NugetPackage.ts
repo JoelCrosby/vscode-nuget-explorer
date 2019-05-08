@@ -12,6 +12,7 @@ export class NugetPackage {
 
     updates?: string[];
     projectName?: string;
+    versions?: string[];
 
     constructor(
         public readonly id: string,
