@@ -61,7 +61,7 @@ export class NugetExplorer {
 
         const packages = await searchService.search();
 
-        if (!packages) { return; }
+        if (!packages || !packages.length) { return; }
 
         if (item) {
 
