@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 import { XMLParser } from '../parser/XMLParser';
 import { DepResolver, ProjectDependacy } from './DepResolver';
-import { showMessage } from '../utils';
+import { showErrorMessage } from '../utils';
 import { ProjectParser } from '../parser/ProjectParser';
 
 export class PackageResolver {
@@ -22,7 +22,7 @@ export class PackageResolver {
             const items = this.getDepsInProjectFile(projectFilePath);
             return await items;
         } else {
-            showMessage('Workspace has no .csproj project file');
+            showErrorMessage('Workspace has no .csproj project file');
             return [];
         }
     }
