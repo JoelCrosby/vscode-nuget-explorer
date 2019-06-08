@@ -1,10 +1,10 @@
 import Axios from 'axios';
 
-import { SearchResult } from './SearchResult';
+import { SearchResult } from '../models/SearchResult';
 
-class NugetApiService {
+export class NugetApiService {
 
-    async search(query: string): Promise<SearchResult | undefined> {
+    static async search(query: string): Promise<SearchResult | undefined> {
 
         try {
             const res = await Axios.get<SearchResult>(
@@ -18,4 +18,3 @@ class NugetApiService {
     }
 }
 
-export const nugetApiService = new NugetApiService();

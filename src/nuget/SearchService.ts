@@ -1,4 +1,4 @@
-import { nugetApiService } from './NuGetApiService';
+import { NugetApiService } from './NuGetApiService';
 import { showInputBox, showPickerView, PickerViewItem } from '../utils';
 
 class SearchService {
@@ -8,7 +8,7 @@ class SearchService {
 
         if (!query) { return; }
 
-        const results = await nugetApiService.search(query);
+        const results = await NugetApiService.search(query);
 
         if (!results) { return; }
 

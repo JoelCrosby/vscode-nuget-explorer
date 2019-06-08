@@ -1,9 +1,9 @@
-import { nugetApiService } from './NuGetApiService';
+import { NugetApiService } from './NuGetApiService';
 import { NugetPackage } from '../models/NugetPackage';
 
-class UpdateService {
+export class UpdateService {
 
-    async checkForUpdates(nugetPackage: NugetPackage): Promise<string[]> {
+    static async checkForUpdates(nugetPackage: NugetPackage): Promise<string[]> {
 
         const versions = await this.getVersions(nugetPackage.id);
 
@@ -14,7 +14,7 @@ class UpdateService {
         return this.getUpdates(nugetPackage);
     }
 
-    private getUpdates(nugetPackage: NugetPackage) {
+    private static getUpdates(nugetPackage: NugetPackage) {
         const { versions } = nugetPackage;
 
         if (!versions) { return []; }
@@ -38,9 +38,9 @@ class UpdateService {
         return updates;
     }
 
-    private async getVersions(packageId: string): Promise<string[]> {
+    private static async getVersions(packageId: string): Promise<string[]> {
 
-        const results = await nugetApiService.search(packageId);
+        const results = await NugetApiService.search(packageId);
 
         if (!results) { return []; }
 
@@ -52,5 +52,3 @@ class UpdateService {
     }
 
 }
-
-export const updateService = new UpdateService();

@@ -1,7 +1,7 @@
 import { WorkspaceManager } from './manager/WorkspaceManager';
 import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
 import { showProgressPopup, showMessage, showPickerView, showErrorMessage } from './utils';
-import { updateService } from './nuget/UpdateService';
+import { UpdateService } from './nuget/UpdateService';
 import { searchService } from './nuget/SearchService';
 import { NugetPackage } from './models/NugetPackage';
 
@@ -26,7 +26,7 @@ export class NugetExplorer {
             if (!nugetPackage) { return; }
 
             try {
-                const result = await updateService.checkForUpdates(nugetPackage);
+                const result = await UpdateService.checkForUpdates(nugetPackage);
                 if (result.length) {
                     showMessage('NuGet package update available');
                 } else {
@@ -48,7 +48,7 @@ export class NugetExplorer {
 
             this.workspaceManagers.forEach(manager => {
                 manager.packages.forEach(nugetPackage => {
-                    updateTasks.push(updateService.checkForUpdates(nugetPackage));
+                    updateTasks.push(UpdateService.checkForUpdates(nugetPackage));
                 });
             });
 
