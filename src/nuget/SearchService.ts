@@ -1,5 +1,5 @@
 import { NugetApiService } from './NuGetApiService';
-import { showInputBox, showPickerView, PickerViewItem } from '../utils';
+import { showInputBox, showPickerView, PickerViewItem } from '../utils/host';
 
 class SearchService {
 

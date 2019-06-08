@@ -5,7 +5,7 @@ import { NugetManager } from './manager/NugetManager';
 import { WorkspaceManager } from './manager/WorkspaceManager';
 import { NugetExplorer } from './NugetExplorer';
 import { PackageResolver } from './resolver/PackageResolver';
-import { showMessage } from './utils';
+import { showMessage } from './utils/host';
 import { InstalledPackagesView } from './views/InstalledPackagesView';
 import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
 

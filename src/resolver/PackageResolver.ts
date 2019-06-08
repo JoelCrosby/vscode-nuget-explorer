@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 import { XMLParser } from '../parser/XMLParser';
 import { DepResolver, ProjectDependacy } from './DepResolver';
-import { showErrorMessage } from '../utils';
+import { showErrorMessage } from '../utils/host';
 import { ProjectParser } from '../parser/ProjectParser';
 
 export class PackageResolver {

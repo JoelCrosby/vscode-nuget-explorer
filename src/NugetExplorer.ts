@@ -1,14 +1,27 @@
 import { WorkspaceManager } from './manager/WorkspaceManager';
 import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
-import { showProgressPopup, showMessage, showPickerView, showErrorMessage } from './utils';
+import { showProgressPopup, showMessage, showPickerView, showErrorMessage } from './utils/host';
 import { UpdateService } from './nuget/UpdateService';
 import { searchService } from './nuget/SearchService';
 import { NugetPackage } from './models/NugetPackage';
 
+
+/**
+ * Main class for orchastrating Tasks.
+ *
+ * @export
+ * @class NugetExplorer
+ */
 export class NugetExplorer {
 
     constructor(private workspaceManagers: WorkspaceManager[], private view: NugetExplorerView) { }
 
+
+    /**
+     * Rescans each worksapce for installed packages and refrehes view.
+     *
+     * @memberof NugetExplorer
+     */
     async refresh() {
         const refreshTasks: Promise<void>[] = [];
 
@@ -19,6 +32,13 @@ export class NugetExplorer {
         this.view.refresh();
     }
 
+
+    /**
+     * Checks for updates for a single package.
+     *
+     * @param {NugetPackage} nugetPackage package to check for updates
+     * @memberof NugetExplorer
+     */
     async checkForUpdates(nugetPackage: NugetPackage) {
 
         await showProgressPopup('NuGet checking for package updates', async () => {
@@ -41,6 +61,12 @@ export class NugetExplorer {
         });
     }
 
+
+    /**
+     * Checks for updates for all packages installed in all workspaces.
+     *
+     * @memberof NugetExplorer
+     */
     async checkForUpdatesAll() {
 
         await showProgressPopup('NuGet checking for package updates', async () => {
@@ -68,6 +94,14 @@ export class NugetExplorer {
         });
     }
 
+
+    /**
+     * Shows prompt to select packages to install and then installs them.
+     *
+     * @param {NugetPackageTreeItem} [item]
+     * @returns
+     * @memberof NugetExplorer
+     */
     async managePackageInstall(item?: NugetPackageTreeItem) {
 
         const packages = await searchService.search();
@@ -93,7 +127,8 @@ export class NugetExplorer {
             if (selected && selected.length) {
                 await showProgressPopup('NuGet Installing Packages', async () => {
                     const installQueue: Promise<void>[] = [];
-                    selected.forEach(manager => installQueue.push(manager.nugetManager.installPackages(packages)));
+                    selected.forEach(manager =>
+                        installQueue.push(manager.nugetManager.installPackages(packages)));
                     await Promise.all(installQueue);
                 });
             }
@@ -103,6 +138,13 @@ export class NugetExplorer {
         this.refresh();
     }
 
+
+    /**
+     * Shows prompt to select packages to uninstall and then uninstalls them.
+     *
+     * @param {NugetPackageTreeItem} item
+     * @memberof NugetExplorer
+     */
     async managePackageUnInstall(item: NugetPackageTreeItem) {
 
         const unistallTasks: Promise<void>[] = [];
@@ -111,8 +153,11 @@ export class NugetExplorer {
         let completionMessage = 'NuGet Packages Removed';
 
         if (!item) {
-            const packages = await this.promptSelectPackages('Select packages to remove', 'Select Projects to remove packages from');
-            packages.forEach(nugetPackage => unistallTasks.push(nugetPackage.manager.nugetManager.uninstall(nugetPackage)));
+            const packages = await this.promptSelectPackages(
+                'Select packages to remove',
+                'Select Projects to remove packages from');
+            packages.forEach(nugetPackage =>
+                unistallTasks.push(nugetPackage.manager.nugetManager.uninstall(nugetPackage)));
         } else {
             if (item.nugetPackage) {
                 progressMessage = `NuGet Removing Package ${item.label}`;
@@ -129,9 +174,23 @@ export class NugetExplorer {
         this.refresh();
     }
 
-    private async promptSelectPackages(prompt: string = 'Select Packages', workspacesPrompt = 'Select Projects'): Promise<NugetPackage[]> {
+
+    /**
+     * Show picker view with installed packages from selected workspace.
+     *
+     * @private
+     * @param {string} [prompt='Select Packages']
+     * @param {string} [workspacesPrompt='Select Projects']
+     * @returns {Promise<NugetPackage[]>}
+     * @memberof NugetExplorer
+     */
+    private async promptSelectPackages(
+        prompt: string = 'Select Packages',
+        workspacesPrompt: string = 'Select Projects'): Promise<NugetPackage[]> {
+
         if (this.workspaceManagers.length === 1) {
-            const selected = await showPickerView<NugetPackage>(this.workspaceManagers[0].packages, true, prompt);
+            const selected = await showPickerView<NugetPackage>(
+                this.workspaceManagers[0].packages, true, prompt);
             return selected || [];
         }
 
@@ -150,6 +209,15 @@ export class NugetExplorer {
         return selected || [];
     }
 
+
+    /**
+     * Show picker view to select workspaces.
+     *
+     * @private
+     * @param {string} [prompt='Select Projects']
+     * @returns {Promise<WorkspaceManager[]>}
+     * @memberof NugetExplorer
+     */
     private async promptSelectWorkspaces(prompt: string = 'Select Projects'): Promise<WorkspaceManager[]> {
         const selected = await showPickerView<WorkspaceManager>
             (this.workspaceManagers, true, prompt);
