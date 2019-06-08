@@ -7,8 +7,6 @@ export class XMLParser implements ProjectParser {
 
     private parser: xml2js.Parser = new xml2js.Parser();
 
-    constructor() { }
-
     parse(input: string): Promise<ProjectTree | undefined> {
 
         return new Promise((resolve, reject) => {
