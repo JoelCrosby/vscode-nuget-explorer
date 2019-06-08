@@ -73,7 +73,11 @@
       },
       {
         "command": "nuget-explorer.uninstall",
-        "title": "NuGet: Remove Package"
+        "title": "NuGet: Remove Package",
+        "icon": {
+          "light": "resources/light/delete.svg",
+          "dark": "resources/dark/delete.svg"
+        }
       },
       {
         "command": "nuget-explorer.check-for-updates",
@@ -81,7 +85,11 @@
       },
       {
         "command": "nuget-explorer.update",
-        "title": "NuGet: Update Package"
+        "title": "NuGet: Update Package",
+        "icon": {
+          "light": "resources/light/update.svg",
+          "dark": "resources/dark/update.svg"
+        }
       }
     ],
     "menus": {
@@ -116,8 +124,8 @@
           "when": "view == nuget-installed && viewItem == package"
         },
         {
-          "command": "nuget-explorer.update",
-          "when": "view == nuget-installed && viewItem == package"
+            "command": "nuget-explorer.update",
+            "when": "view == nuget-installed && viewItem == package"
         }
       ]
     }
