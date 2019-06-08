@@ -13,7 +13,7 @@ export function showMessage(message: string): void {
 }
 
 export function showErrorMessage(message: string): void {
-    vscode.window.showErrorMessage(message);
+    vscode.window.showErrorMessage(`[NuGet Explorer] ${message}`);
 }
 
 export function showPickerView<T extends PickerViewItem>(items: Array<T>, canPickManay: boolean, placeholder: string) {
