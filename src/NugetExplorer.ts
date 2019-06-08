@@ -1,6 +1,6 @@
 import { WorkspaceManager } from './manager/WorkspaceManager';
 import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
-import { showProgressPopup, showMessage, showPickerView } from './utils';
+import { showProgressPopup, showMessage, showPickerView, showErrorMessage } from './utils';
 import { updateService } from './nuget/UpdateService';
 import { searchService } from './nuget/SearchService';
 import { NugetPackage } from './models/NugetPackage';
@@ -11,8 +11,11 @@ export class NugetExplorer {
 
     async refresh() {
         const refreshTasks: Promise<void>[] = [];
+
         this.workspaceManagers.forEach(manager => refreshTasks.push(manager.refresh()));
+
         await Promise.all(refreshTasks);
+
         this.view.refresh();
     }
 
@@ -22,12 +25,16 @@ export class NugetExplorer {
 
             if (!nugetPackage) { return; }
 
-            const result = await updateService.checkForUpdates(nugetPackage);
-
-            if (result.length) {
-                showMessage('NuGet package update available');
-            } else {
-                showMessage('NuGet package up to date');
+            try {
+                const result = await updateService.checkForUpdates(nugetPackage);
+                if (result.length) {
+                    showMessage('NuGet package update available');
+                } else {
+                    showMessage('NuGet package up to date');
+                }
+            } catch (error) {
+                showErrorMessage(error.message);
+                return;
             }
 
             this.view.refresh();
@@ -45,12 +52,16 @@ export class NugetExplorer {
                 });
             });
 
-            const results = await Promise.all(updateTasks);
-
-            if (results.filter(result => result.length).length) {
-                showMessage('NuGet package updates are available');
-            } else {
-                showMessage('NuGet All packages up to date');
+            try {
+                const results = await Promise.all(updateTasks);
+                if (results.filter(result => result.length).length) {
+                    showMessage('NuGet package updates are available');
+                } else {
+                    showMessage('NuGet All packages up to date');
+                }
+            } catch (error) {
+                showErrorMessage(error.message);
+                return;
             }
 
             this.view.refresh();

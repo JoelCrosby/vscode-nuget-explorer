@@ -39,6 +39,7 @@ class UpdateService {
     }
 
     private async getVersions(packageId: string): Promise<string[]> {
+
         const results = await nugetApiService.search(packageId);
 
         if (!results) { return []; }
