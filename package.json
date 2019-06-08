@@ -78,6 +78,10 @@
       {
         "command": "nuget-explorer.check-for-updates",
         "title": "NuGet: Check for updates"
+      },
+      {
+        "command": "nuget-explorer.update",
+        "title": "NuGet: Update Package"
       }
     ],
     "menus": {
@@ -109,6 +113,10 @@
         },
         {
           "command": "nuget-explorer.check-for-updates",
+          "when": "view == nuget-installed && viewItem == package"
+        },
+        {
+          "command": "nuget-explorer.update",
           "when": "view == nuget-installed && viewItem == package"
         }
       ]

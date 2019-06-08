@@ -78,6 +78,10 @@ export class ExtensionManager {
         vscode.commands.registerCommand('nuget-explorer.uninstall', (item: NugetPackageTreeItem) => {
             this.nugetExplorer.managePackageUnInstall(item);
         });
+
+        vscode.commands.registerCommand('nuget-explorer.update', (item: NugetPackageTreeItem) => {
+            this.nugetExplorer.managePackageUpdate(item);
+        });
     }
 
 }

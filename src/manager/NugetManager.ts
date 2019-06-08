@@ -33,4 +33,15 @@ export class NugetManager {
         }
     }
 
+    async update(nugetPackage: NugetPackage) {
+        const version = nugetPackage.latestVersion();
+
+        if (!version) { return; }
+        try {
+            await this.dotnetManager.execute(['add', 'package', nugetPackage.id, "-v",version]);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
 }

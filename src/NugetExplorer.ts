@@ -176,6 +176,40 @@ export class NugetExplorer {
 
 
     /**
+     * Shows prompt to select packages to update and then updates them.
+     *
+     * @param {NugetPackageTreeItem} item
+     * @memberof NugetExplorer
+     */
+    async managePackageUpdate(item: NugetPackageTreeItem) {
+        const updateTasks: Promise<void>[] = [];
+
+        let progressMessage = 'NuGet Updating Packages';
+        let completionMessage = 'NuGet Packages Updated';
+
+        if (!item) {
+            const packages = await this.promptSelectPackages(
+                'Select packages to update',
+                'Select Projects to update packages from');
+            packages.forEach(nugetPackage =>
+                updateTasks.push(nugetPackage.manager.nugetManager.update(nugetPackage)));
+        } else {
+            if (item.nugetPackage) {
+                progressMessage = `NuGet Updating Package ${item.label}`;
+                completionMessage = `NuGet Package ${item.label} Updated`;
+                updateTasks.push(item.manager.nugetManager.update(item.nugetPackage));
+            }
+        }
+
+        await showProgressPopup(progressMessage, async () => {
+            await Promise.all(updateTasks);
+        });
+
+        showMessage(completionMessage);
+        this.refresh();
+    }
+
+    /**
      * Show picker view with installed packages from selected workspace.
      *
      * @private
