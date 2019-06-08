@@ -1,8 +1,20 @@
 # Nuget Explorer
 
+## Prerequisites
+
+Nuget Explorer is powered by the dotnet core cli. To install, update and remove packages the dotnet core cli is required. It is included with the dotnet core sdk which can be found [here.](https://dotnet.microsoft.com/download)
+
 ## Features
 
-Shows a list of the currently insalled packages in a dotnet core project.
+Nuget Explorer makes it easy to install, update and remove NuGet dependancies in dotnet core projects.
+
+- Sidebar view that displays installed packages for each worksapce.
+- Add one or multiple packages to a project.
+- Remove one or multiple packages from a project.
+- Update a package.
+- Check for updates to package.
+- Check for updates for all installed packages in a project.
+- Support for multi-root workspaces.
 
 ## Release Notes
 
