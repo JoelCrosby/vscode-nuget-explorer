@@ -14,7 +14,10 @@ import { NugetPackage } from './models/NugetPackage';
  */
 export class NugetExplorer {
 
-    constructor(private workspaceManagers: WorkspaceManager[], private view: NugetExplorerView) { }
+    constructor(
+        private workspaceManagers: WorkspaceManager[],
+        private installedView: NugetExplorerView,
+        private updatesView: NugetExplorerView) { }
 
 
     /**
@@ -29,7 +32,8 @@ export class NugetExplorer {
 
         await Promise.all(refreshTasks);
 
-        this.view.refresh();
+        this.installedView.refresh();
+        this.updatesView.refresh();
     }
 
 
@@ -57,7 +61,7 @@ export class NugetExplorer {
                 return;
             }
 
-            this.view.refresh();
+            this.installedView.refresh();
         });
     }
 
@@ -65,35 +69,52 @@ export class NugetExplorer {
     /**
      * Checks for updates for all packages installed in all workspaces.
      *
+     * @param {boolean} [silent] Whether to show progress message
      * @memberof NugetExplorer
      */
-    async checkForUpdatesAll() {
-
-        await showProgressPopup('NuGet checking for package updates', async () => {
-            const updateTasks: Promise<string[]>[] = [];
-
-            this.workspaceManagers.forEach(manager => {
-                manager.packages.forEach(nugetPackage => {
-                    updateTasks.push(UpdateService.checkForUpdates(nugetPackage));
-                });
+    async checkForUpdatesAll(silent: boolean = false) {
+        if (silent) {
+            await this.manageCheckForUpdatesAll(silent);
+        } else {
+            await showProgressPopup('NuGet checking for package updates', async () => {
+                await this.manageCheckForUpdatesAll(silent);
             });
-
-            try {
-                const results = await Promise.all(updateTasks);
-                if (results.filter(result => result.length).length) {
-                    showMessage('NuGet package updates are available');
-                } else {
-                    showMessage('NuGet All packages up to date');
-                }
-            } catch (error) {
-                showErrorMessage(error.message);
-                return;
-            }
-
-            this.view.refresh();
-        });
+        }
     }
 
+
+    private async manageCheckForUpdatesAll(silent: boolean = false) {
+        const updateTasks: Promise<string[]>[] = [];
+
+        this.workspaceManagers.forEach(manager => {
+            manager.packages.forEach(nugetPackage => {
+                updateTasks.push(UpdateService.checkForUpdates(nugetPackage));
+            });
+        });
+
+
+        try {
+            const results = await Promise.all(updateTasks);
+
+            this.workspaceManagers.forEach(manager => {
+                manager.refreshUpdates();
+            });
+
+            if (silent) { return; }
+
+            if (results.filter(result => result.length).length) {
+                showMessage('NuGet package updates are available');
+            } else {
+                showMessage('NuGet All packages up to date');
+            }
+        } catch (error) {
+            showErrorMessage(error.message);
+            return;
+        }
+
+        this.installedView.refresh();
+        this.updatesView.refresh();
+    }
 
     /**
      * Shows prompt to select packages to install and then installs them.

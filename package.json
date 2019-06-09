@@ -43,6 +43,11 @@
           "id": "nuget-installed",
           "name": "Installed Packages",
           "when": "inDotnetProject"
+        },
+        {
+            "id": "nuget-updates",
+            "name": "Packages With Updates",
+            "when": "inDotnetProject"
         }
       ]
     },
@@ -125,7 +130,8 @@
         },
         {
             "command": "nuget-explorer.update",
-            "when": "view == nuget-installed && viewItem == package"
+            "when": "view == nuget-updates && viewItem == package",
+            "group": "inline"
         }
       ]
     }

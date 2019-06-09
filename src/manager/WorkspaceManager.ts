@@ -13,6 +13,7 @@ export class WorkspaceManager implements QuickPickItem {
     alwaysShow?: boolean;
 
     packages: NugetPackage[] = [];
+    packagesWithUpdates: NugetPackage[] = [];
 
     constructor(
         public name: string,
@@ -27,6 +28,11 @@ export class WorkspaceManager implements QuickPickItem {
             dep.version,
             this
         ));
+        this.refreshUpdates();
+    }
+
+    refreshUpdates() {
+        this.packagesWithUpdates = this.packages.filter(dep => dep.latestVersion())
     }
 
 }

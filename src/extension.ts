@@ -8,6 +8,7 @@ import { PackageResolver } from './resolver/PackageResolver';
 import { showMessage } from './utils/host';
 import { InstalledPackagesView } from './views/InstalledPackagesView';
 import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
+import { UpdatePackagesView } from './views/UpdatePackagesView';
 
 export function activate(context: vscode.ExtensionContext) {
     extensionManager.start();
@@ -21,8 +22,9 @@ export class ExtensionManager {
     workspaceManagers: WorkspaceManager[] = [];
 
     installedPackagesView = new InstalledPackagesView(this.workspaceManagers);
+    updatePackagesView = new UpdatePackagesView(this.workspaceManagers);
 
-    nugetExplorer = new NugetExplorer(this.workspaceManagers, this.installedPackagesView);
+    nugetExplorer = new NugetExplorer(this.workspaceManagers, this.installedPackagesView, this.updatePackagesView);
 
     start() {
 
@@ -46,6 +48,8 @@ export class ExtensionManager {
                 if (this.workspaceManagers.filter(manager => manager.resolver.isValidWorkspace()).length) {
                     this.registerViewAndCommands();
                 }
+
+                this.nugetExplorer.checkForUpdatesAll(true);
             });
 
     }
@@ -56,6 +60,7 @@ export class ExtensionManager {
         vscode.commands.executeCommand('setContext', 'inDotnetProject', true);
 
         vscode.window.registerTreeDataProvider('nuget-installed', this.installedPackagesView);
+        vscode.window.registerTreeDataProvider('nuget-updates', this.updatePackagesView);
 
         vscode.commands.registerCommand('nuget-explorer.refresh', () => {
             this.nugetExplorer.refresh();
