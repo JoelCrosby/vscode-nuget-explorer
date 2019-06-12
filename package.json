@@ -26,6 +26,31 @@
     "workspaceContains:**/*.csproj"
   ],
   "main": "./dist/extension",
+  "scripts": {
+    "vscode:prepublish": "webpack --mode production",
+    "webpack": "webpack --mode development",
+    "webpack-dev": "webpack --mode development --watch",
+    "compile": "webpack --mode none",
+    "watch": "webpack --mode none --watch",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test-compile": "tsc -p ./"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.42",
+    "@types/node": "^10.12.21",
+    "@types/xml2js": "^0.4.4",
+    "copy-webpack-plugin": "^5.0.3",
+    "ts-loader": "^5.4.5",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.1",
+    "vscode": "^1.1.28",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "xml2js": "^0.4.19"
+  },
   "contributes": {
     "viewsContainers": {
       "activitybar": [
@@ -135,30 +160,5 @@
         }
       ]
     }
-  },
-  "scripts": {
-    "vscode:prepublish": "webpack --mode production",
-    "webpack": "webpack --mode development",
-    "webpack-dev": "webpack --mode development --watch",
-    "compile": "webpack --mode none",
-    "watch": "webpack --mode none --watch",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test-compile": "tsc -p ./"
-  },
-  "devDependencies": {
-    "@types/mocha": "^2.2.42",
-    "@types/node": "^10.12.21",
-    "@types/xml2js": "^0.4.4",
-    "copy-webpack-plugin": "^5.0.3",
-    "ts-loader": "^5.4.5",
-    "tslint": "^5.12.1",
-    "typescript": "^3.3.1",
-    "vscode": "^1.1.28",
-    "webpack": "^4.30.0",
-    "webpack-cli": "^3.3.1"
-  },
-  "dependencies": {
-    "axios": "^0.19.0",
-    "xml2js": "^0.4.19"
   }
 }
