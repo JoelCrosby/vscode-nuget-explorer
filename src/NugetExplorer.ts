@@ -45,10 +45,9 @@ export class NugetExplorer {
      */
     async checkForUpdates(nugetPackage: NugetPackage) {
 
+        if (!nugetPackage) { return; }
+
         await showProgressPopup('NuGet checking for package updates', async () => {
-
-            if (!nugetPackage) { return; }
-
             try {
                 const result = await UpdateService.checkForUpdates(nugetPackage);
                 if (result.length) {
