@@ -4,7 +4,7 @@ import { DotnetManager } from './manager/DotnetManager';
 import { NugetManager } from './manager/NugetManager';
 import { WorkspaceManager } from './manager/WorkspaceManager';
 import { NugetExplorer } from './NugetExplorer';
-import { PackageResolver } from './resolver/PackageResolver';
+import { ProjectResolver } from './resolver/ProjectResolver';
 import { showMessage } from './utils/host';
 import { InstalledPackagesView } from './views/InstalledPackagesView';
 import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
@@ -33,7 +33,7 @@ export class ExtensionManager {
         }
 
         this.workspaces.forEach((worksapce: vscode.WorkspaceFolder) => {
-            const resolver = new PackageResolver(worksapce.uri.fsPath);
+            const resolver = new ProjectResolver(worksapce.uri.fsPath);
             const nugetManager = new NugetManager(
                 new DotnetManager(this.outputChannel, worksapce.uri.fsPath),
                 this.installedPackagesView
@@ -67,7 +67,7 @@ export class ExtensionManager {
         });
 
         vscode.commands.registerCommand('nuget-explorer.check-for-updates', (item: NugetPackageTreeItem) => {
-            if (item.nugetPackage) {
+            if (item && item.nugetPackage) {
                 this.nugetExplorer.checkForUpdates(item.nugetPackage);
             }
         });

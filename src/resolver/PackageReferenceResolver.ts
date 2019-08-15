@@ -1,6 +1,6 @@
-import { ProjectTree } from '../parser/models/Project';
+import { ProjectTree } from '../models/Project';
 
-export class DepResolver {
+export class PackageResolver {
 
     static resolve(project: ProjectTree): ProjectDependacy[] {
         if (!project.ItemGroup) {

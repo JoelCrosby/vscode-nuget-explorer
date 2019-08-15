@@ -2,7 +2,7 @@ import { WorkspaceManager } from './manager/WorkspaceManager';
 import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
 import { showProgressPopup, showMessage, showPickerView, showErrorMessage } from './utils/host';
 import { UpdateService } from './nuget/UpdateService';
-import { searchService } from './nuget/SearchService';
+import { SearchService } from './nuget/SearchService';
 import { NugetPackage } from './models/NugetPackage';
 
 
@@ -107,6 +107,7 @@ export class NugetExplorer {
                 showMessage('NuGet All packages up to date');
             }
         } catch (error) {
+            if (silent) { return; }
             showErrorMessage(error.message);
             return;
         }
@@ -124,7 +125,7 @@ export class NugetExplorer {
      */
     async managePackageInstall(item?: NugetPackageTreeItem) {
 
-        const packages = await searchService.search();
+        const packages = await SearchService.search();
 
         if (!packages || !packages.length) { return; }
 
@@ -173,11 +174,11 @@ export class NugetExplorer {
         let completionMessage = 'NuGet Packages Removed';
 
         if (!item) {
-            const packages = await this.promptSelectPackages(
-                'Select packages to remove',
-                'Select Projects to remove packages from');
-            packages.forEach(nugetPackage =>
-                unistallTasks.push(nugetPackage.manager.nugetManager.uninstall(nugetPackage)));
+            const packages = await this.promptSelectPackages
+                ('Select packages to remove', 'Select Projects to remove packages from');
+            packages.forEach(nugetPackage => {
+                unistallTasks.push(nugetPackage.manager.nugetManager.uninstall(nugetPackage));
+            });
         } else {
             if (item.nugetPackage) {
                 progressMessage = `NuGet Removing Package ${item.label}`;
@@ -250,7 +251,6 @@ export class NugetExplorer {
 
         const selectedWorkspaces = await this.promptSelectWorkspaces(workspacesPrompt);
         const packagesToSelect: NugetPackage[] = [];
-
 
         selectedWorkspaces.forEach(workspace => {
             if (selectedWorkspaces.length > 1) {

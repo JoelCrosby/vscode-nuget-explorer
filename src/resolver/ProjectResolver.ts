@@ -2,11 +2,11 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 import { XMLParser } from '../parser/XMLParser';
-import { DepResolver, ProjectDependacy } from './DepResolver';
+import { PackageResolver, ProjectDependacy } from './PackageReferenceResolver';
 import { showErrorMessage } from '../utils/host';
 import { ProjectParser } from '../parser/ProjectParser';
 
-export class PackageResolver {
+export class ProjectResolver {
 
     public isValidWorkspace = () => this.resolveProjectFile();
 
@@ -52,7 +52,7 @@ export class PackageResolver {
 
         if (!projectTree) { return []; }
 
-        const items = DepResolver.resolve(projectTree);
+        const items = PackageResolver.resolve(projectTree);
 
         return items;
     }

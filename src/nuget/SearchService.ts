@@ -1,9 +1,9 @@
 import { NugetApiService } from './NuGetApiService';
 import { showInputBox, showPickerView, PickerViewItem } from '../utils/host';
 
-class SearchService {
+export class SearchService {
 
-    async search(): Promise<string[] | undefined> {
+    static async search(): Promise<string[] | undefined> {
         const query = await showInputBox('Search the NuGet Gallery for Pacakages', 'Search for Pacakges');
 
         if (!query) { return; }
@@ -27,5 +27,3 @@ class SearchService {
         return selectedOptions.map(item => item.label);
     }
 }
-
-export const searchService = new SearchService();

@@ -1,4 +1,4 @@
-import { PackageResolver } from '../resolver/PackageResolver';
+import { ProjectResolver } from '../resolver/ProjectResolver';
 import { NugetManager } from './NugetManager';
 import { QuickPickItem } from 'vscode';
 import { NugetPackage } from '../models/NugetPackage';
@@ -17,7 +17,7 @@ export class WorkspaceManager implements QuickPickItem {
 
     constructor(
         public name: string,
-        public resolver: PackageResolver,
+        public resolver: ProjectResolver,
         public nugetManager: NugetManager) { }
 
     async refresh() {
@@ -32,7 +32,7 @@ export class WorkspaceManager implements QuickPickItem {
     }
 
     refreshUpdates() {
-        this.packagesWithUpdates = this.packages.filter(dep => dep.latestVersion())
+        this.packagesWithUpdates = this.packages.filter(dep => dep.latestVersion());
     }
 
 }
