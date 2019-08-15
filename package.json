@@ -4,6 +4,7 @@
   "description": "A simple way to search, add, update and remove NuGet packages in .Net Core projects.",
   "version": "0.0.1",
   "publisher": "joel-crosby",
+  "author": "Joel Crosby <joelcrosby@live.co.uk>",
   "icon": "resources/icon.png",
   "engines": {
     "vscode": "^1.33.0"
@@ -20,7 +21,17 @@
     "nuget explorer",
     "dotnet",
     ".net",
-    "dotnetcore"
+    "dotnetcore",
+    "package",
+    "csproj",
+    "fsproj",
+    ".net core",
+    "manager",
+    "add",
+    "remove",
+    "install",
+    "C#",
+    "F#"
   ],
   "activationEvents": [
     "workspaceContains:**/*.csproj"

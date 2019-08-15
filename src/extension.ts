@@ -47,11 +47,10 @@ export class ExtensionManager {
                 // Only show NuGet View Container if any workspace contains a valid project file
                 if (this.workspaceManagers.filter(manager => manager.resolver.isValidWorkspace()).length) {
                     this.registerViewAndCommands();
+                    this.nugetExplorer.checkForUpdatesAll(true);
                 }
 
-                this.nugetExplorer.checkForUpdatesAll(true);
             });
-
     }
 
     private registerViewAndCommands() {

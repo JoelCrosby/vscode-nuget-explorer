@@ -19,7 +19,7 @@ export class DotnetManager {
 
             dotnet.stdout.on('error', (err: Error) => {
                 this.output.appendLine(err.message);
-                reject();
+                reject(err.message);
             });
 
             dotnet.on('close', (code) => {

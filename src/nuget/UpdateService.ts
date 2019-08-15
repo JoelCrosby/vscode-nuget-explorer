@@ -40,15 +40,10 @@ export class UpdateService {
 
     private static async getVersions(packageId: string): Promise<string[]> {
 
-        const results = await NugetApiService.search(packageId);
+        const results = await NugetApiService.getVersions(packageId);
 
         if (!results) { return []; }
 
-        const packageMeta = results.data.find(result => result.id === packageId);
-
-        if (!packageMeta) { return []; }
-
-        return packageMeta.versions.map(version => version.version);
+        return results.versions || [];
     }
-
 }
