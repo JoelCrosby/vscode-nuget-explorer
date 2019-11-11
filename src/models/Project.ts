@@ -1,10 +1,10 @@
 export interface Project {
-    Project?: ProjectTree;
+  Project?: ProjectTree;
 }
 
 export interface ProjectTree {
-    ItemGroup?: any[];
-    PropertyGroup?: any;
-    Sdk?: string;
-    Target?: any[];
+  ItemGroup?: any[];
+  PropertyGroup?: any;
+  Sdk?: string;
+  Target?: any[];
 }

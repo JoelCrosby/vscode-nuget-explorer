@@ -1,36 +1,35 @@
 import { spawn } from 'child_process';
 
 export class DotnetManager {
+  constructor(private output: OutputChannel, private rootPath: string) {}
 
-    constructor(private output: OutputChannel, private rootPath: string) { }
+  async execute(commands: string[]): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.rootPath) {
+        return reject();
+      }
 
-    async execute(commands: string[]): Promise<void> {
-        return new Promise((resolve, reject) => {
+      const dotnet = spawn('dotnet', commands, { cwd: this.rootPath });
 
-            if (!this.rootPath) { return reject(); }
+      dotnet.stdout.setEncoding('utf8');
 
-            const dotnet = spawn('dotnet', commands, { cwd: this.rootPath });
+      dotnet.stdout.on('data', chunk => {
+        this.output.append(chunk);
+      });
 
-            dotnet.stdout.setEncoding('utf8');
+      dotnet.stdout.on('error', (err: Error) => {
+        this.output.appendLine(err.message);
+        reject(err.message);
+      });
 
-            dotnet.stdout.on('data', (chunk) => {
-                this.output.append(chunk);
-            });
-
-            dotnet.stdout.on('error', (err: Error) => {
-                this.output.appendLine(err.message);
-                reject(err.message);
-            });
-
-            dotnet.on('close', (code) => {
-                resolve();
-            });
-        });
-    }
-
+      dotnet.on('close', code => {
+        resolve();
+      });
+    });
+  }
 }
 
 export interface OutputChannel {
-    append(value: string): void;
-    appendLine(value: string): void;
+  append(value: string): void;
+  appendLine(value: string): void;
 }

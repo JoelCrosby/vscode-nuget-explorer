@@ -1,3 +1,3 @@
 export interface VersionsResponse {
-    versions: string[];
+  versions: string[];
 }

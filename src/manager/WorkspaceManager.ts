@@ -5,34 +5,27 @@ import { NugetPackage } from '../models/NugetPackage';
 
 export class WorkspaceManager implements QuickPickItem {
 
-    get label(): string { return this.name; }
+  get label(): string {
+    return this.name;
+  }
 
-    description?: string;
-    detail?: string;
-    picked?: boolean;
-    alwaysShow?: boolean;
+  description?: string;
+  detail?: string;
+  picked?: boolean;
+  alwaysShow?: boolean;
 
-    packages: NugetPackage[] = [];
-    packagesWithUpdates: NugetPackage[] = [];
+  packages: NugetPackage[] = [];
+  packagesWithUpdates: NugetPackage[] = [];
 
-    constructor(
-        public name: string,
-        public resolver: ProjectResolver,
-        public nugetManager: NugetManager) { }
+  constructor(public name: string, public resolver: ProjectResolver, public nugetManager: NugetManager) {}
 
-    async refresh() {
-        const deps = await this.resolver.getPackages();
-        this.packages = deps.map(dep => new NugetPackage(
-            dep.name,
-            dep.name,
-            dep.version,
-            this
-        ));
-        this.refreshUpdates();
-    }
+  async refresh() {
+    const deps = await this.resolver.getPackages();
+    this.packages = deps.map(dep => new NugetPackage(dep.name, dep.name, dep.version, this));
+    this.refreshUpdates();
+  }
 
-    refreshUpdates() {
-        this.packagesWithUpdates = this.packages.filter(dep => dep.latestVersion());
-    }
-
+  refreshUpdates() {
+    this.packagesWithUpdates = this.packages.filter(dep => dep.latestVersion());
+  }
 }

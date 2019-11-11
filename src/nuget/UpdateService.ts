@@ -2,48 +2,51 @@ import { NugetApiService } from './NuGetApiService';
 import { NugetPackage } from '../models/NugetPackage';
 
 export class UpdateService {
+  static async checkForUpdates(nugetPackage: NugetPackage): Promise<string[]> {
+    const versions = await this.getVersions(nugetPackage.id);
 
-    static async checkForUpdates(nugetPackage: NugetPackage): Promise<string[]> {
-
-        const versions = await this.getVersions(nugetPackage.id);
-
-        if (!versions || !nugetPackage.version) { return []; }
-
-        nugetPackage.versions = versions;
-
-        return this.getUpdates(nugetPackage);
+    if (!versions || !nugetPackage.version) {
+      return [];
     }
 
-    private static getUpdates(nugetPackage: NugetPackage) {
-        const { versions } = nugetPackage;
+    nugetPackage.versions = versions;
 
-        if (!versions) { return []; }
+    return this.getUpdates(nugetPackage);
+  }
 
-        const currentVersionIndex = versions.findIndex(version => version === nugetPackage.version);
+  private static getUpdates(nugetPackage: NugetPackage): string[] {
+    const { versions } = nugetPackage;
 
-        const updates: string[] = [];
-
-        if (currentVersionIndex === -1) {
-            return [];
-        }
-
-        if (currentVersionIndex < versions.length - 1) {
-            updates.push(...versions.slice(currentVersionIndex));
-        }
-
-        if (updates && updates.length) {
-            nugetPackage.updates = updates;
-        }
-
-        return updates;
+    if (!versions) {
+      return [];
     }
 
-    private static async getVersions(packageId: string): Promise<string[]> {
+    const currentVersionIndex = versions.findIndex(version => version === nugetPackage.version);
 
-        const results = await NugetApiService.getVersions(packageId);
+    const updates: string[] = [];
 
-        if (!results) { return []; }
-
-        return results.versions || [];
+    if (currentVersionIndex === -1) {
+      return [];
     }
+
+    if (currentVersionIndex < versions.length - 1) {
+      updates.push(...versions.slice(currentVersionIndex));
+    }
+
+    if (updates && updates.length) {
+      nugetPackage.updates = updates;
+    }
+
+    return updates;
+  }
+
+  private static async getVersions(packageId: string): Promise<string[]> {
+    const results = await NugetApiService.getVersions(packageId);
+
+    if (!results) {
+      return [];
+    }
+
+    return results.versions || [];
+  }
 }
