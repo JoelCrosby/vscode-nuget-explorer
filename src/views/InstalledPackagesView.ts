@@ -1,6 +1,6 @@
 import { EventEmitter, ProviderResult, TreeDataProvider, TreeItem, TreeItemCollapsibleState } from 'vscode';
-import { NugetPackageTreeItem, TreeItemType } from './TreeItems/NugetPackageTreeItem';
-import { ProjectManager } from '../manager/ProjectManager';
+import { NugetPackageTreeItem, TreeItemType } from './treeItems/nugetPackageTreeItem';
+import { ProjectManager } from '../manager/projectManager';
 
 export class InstalledPackagesView implements TreeDataProvider<NugetPackageTreeItem> {
 

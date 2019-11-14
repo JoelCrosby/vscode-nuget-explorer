@@ -1,9 +1,9 @@
-import { ProjectManager } from './manager/ProjectManager';
-import { NugetPackage } from './models/NugetPackage';
-import { SearchService } from './nuget/SearchService';
-import { UpdateService } from './nuget/UpdateService';
+import { ProjectManager } from './manager/projectManager';
+import { NugetPackage } from './models/nugetPackage';
+import { SearchService } from './nuget/searchService';
+import { UpdateService } from './nuget/updateService';
 import { showErrorMessage, showMessage, showPickerView, showProgressPopup } from './utils/host';
-import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
+import { NugetPackageTreeItem } from './views/treeItems/nugetPackageTreeItem';
 
 /**
  * Main class for orchastrating Tasks.

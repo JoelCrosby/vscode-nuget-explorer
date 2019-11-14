@@ -1,6 +1,6 @@
-import { DotnetManager } from './DotnetManager';
-import { InstalledPackagesView } from '../views/InstalledPackagesView';
-import { NugetPackage } from '../models/NugetPackage';
+import { DotnetManager } from './dotnetManager';
+import { InstalledPackagesView } from '../views/installedPackagesView';
+import { NugetPackage } from '../models/nugetPackage';
 
 export class NugetManager {
   constructor(private dotnetManager: DotnetManager, private installedPackages: InstalledPackagesView) {}

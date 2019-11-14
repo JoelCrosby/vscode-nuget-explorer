@@ -1,7 +1,7 @@
-import { ProjectReference } from '../resolver/ProjectReference';
-import { NugetManager } from './NugetManager';
+import { ProjectReference } from '../resolver/projectReference';
+import { NugetManager } from './nugetManager';
 import { QuickPickItem } from 'vscode';
-import { NugetPackage } from '../models/NugetPackage';
+import { NugetPackage } from '../models/nugetPackage';
 
 export class ProjectManager implements QuickPickItem {
 
