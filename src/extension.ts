@@ -2,10 +2,9 @@ import * as vscode from 'vscode';
 
 import { DotnetManager } from './manager/DotnetManager';
 import { NugetManager } from './manager/NugetManager';
-import { WorkspaceManager } from './manager/WorkspaceManager';
+import { ProjectManager } from './manager/ProjectManager';
 import { NugetExplorer } from './NugetExplorer';
 import { ProjectResolver } from './resolver/ProjectResolver';
-import { showMessage } from './utils/host';
 import { InstalledPackagesView } from './views/InstalledPackagesView';
 import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
 import { UpdatePackagesView } from './views/UpdatePackagesView';
@@ -18,33 +17,28 @@ export function activate(context: vscode.ExtensionContext) {
 export class ExtensionManager {
   outputChannel = vscode.window.createOutputChannel('NuGet');
 
-  workspaces = vscode.workspace.workspaceFolders;
-  workspaceManagers: WorkspaceManager[] = [];
+  workspaceManagers: ProjectManager[] = [];
 
   installedPackagesView = new InstalledPackagesView(this.workspaceManagers);
   updatePackagesView = new UpdatePackagesView(this.workspaceManagers);
 
   nugetExplorer = new NugetExplorer(this.workspaceManagers, this.installedPackagesView, this.updatePackagesView);
 
-  start() {
-    if (!this.workspaces || this.workspaces.length < 1) {
-      return showMessage('No dependency in empty workspace');
+  async start() {
+    const projects = await ProjectResolver.getProjectsInWorkspace();
+
+    projects.forEach(project => {
+      const nugetManager = new NugetManager(new DotnetManager(this.outputChannel, project.rootFolder), this.installedPackagesView);
+      this.workspaceManagers.push(new ProjectManager(project.name, project, nugetManager));
+    });
+
+    await this.nugetExplorer.refresh();
+
+    // Only show NuGet View Container if any workspace contains a valid project file
+    if (this.workspaceManagers.length) {
+      this.registerViewAndCommands();
+      this.nugetExplorer.checkForUpdatesAll(true);
     }
-
-    this.workspaces.forEach((worksapce: vscode.WorkspaceFolder) => {
-      const resolver = new ProjectResolver(worksapce.uri.fsPath);
-      const nugetManager = new NugetManager(new DotnetManager(this.outputChannel, worksapce.uri.fsPath), this.installedPackagesView);
-
-      this.workspaceManagers.push(new WorkspaceManager(worksapce.name, resolver, nugetManager));
-    });
-
-    this.nugetExplorer.refresh().then(() => {
-      // Only show NuGet View Container if any workspace contains a valid project file
-      if (this.workspaceManagers.filter(manager => manager.resolver.isValidWorkspace()).length) {
-        this.registerViewAndCommands();
-        this.nugetExplorer.checkForUpdatesAll(true);
-      }
-    });
   }
 
   private registerViewAndCommands() {

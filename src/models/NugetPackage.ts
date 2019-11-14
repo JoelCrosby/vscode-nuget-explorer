@@ -1,4 +1,4 @@
-import { WorkspaceManager } from '../manager/WorkspaceManager';
+import { ProjectManager } from '../manager/ProjectManager';
 
 export class NugetPackage {
   get label() {
@@ -17,7 +17,7 @@ export class NugetPackage {
     readonly id: string,
     readonly name: string,
     readonly version: string,
-    readonly manager: WorkspaceManager
+    readonly manager: ProjectManager
   ) {}
 
   latestVersion(): string | undefined {

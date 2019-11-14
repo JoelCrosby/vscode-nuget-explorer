@@ -1,14 +1,13 @@
 import { EventEmitter, ProviderResult, TreeDataProvider, TreeItem, TreeItemCollapsibleState } from 'vscode';
-
 import { NugetPackageTreeItem, TreeItemType } from './TreeItems/NugetPackageTreeItem';
-import { WorkspaceManager } from '../manager/WorkspaceManager';
+import { ProjectManager } from '../manager/ProjectManager';
 
 export class InstalledPackagesView implements TreeDataProvider<NugetPackageTreeItem> {
 
   private _onDidChangeTreeData = new EventEmitter<NugetPackageTreeItem | undefined>();
   readonly onDidChangeTreeData? = this._onDidChangeTreeData.event;
 
-  constructor(private managers: WorkspaceManager[]) {}
+  constructor(private managers: ProjectManager[]) {}
 
   getTreeItem(element: NugetPackageTreeItem): TreeItem | Thenable<TreeItem> {
     return element;

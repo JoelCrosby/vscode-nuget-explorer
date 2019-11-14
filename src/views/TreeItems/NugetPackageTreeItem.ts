@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { WorkspaceManager } from '../../manager/WorkspaceManager';
+import { ProjectManager } from '../../manager/ProjectManager';
 import { packageIcon, projectIcon, packageUpdateIcon } from '../Icons';
 import { NugetPackage } from '../../models/NugetPackage';
 
@@ -10,7 +10,7 @@ export class NugetPackageTreeItem extends vscode.TreeItem {
     readonly version: string,
     readonly collapsibleState: vscode.TreeItemCollapsibleState,
     readonly type = TreeItemType.package,
-    readonly manager: WorkspaceManager,
+    readonly manager: ProjectManager,
     readonly nugetPackage?: NugetPackage
   ) {
     super(label, collapsibleState);

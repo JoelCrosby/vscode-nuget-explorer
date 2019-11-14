@@ -1,4 +1,4 @@
-import { WorkspaceManager } from './manager/WorkspaceManager';
+import { ProjectManager } from './manager/ProjectManager';
 import { NugetPackage } from './models/NugetPackage';
 import { SearchService } from './nuget/SearchService';
 import { UpdateService } from './nuget/UpdateService';
@@ -14,7 +14,7 @@ import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
 export class NugetExplorer {
 
   constructor(
-    private workspaceManagers: WorkspaceManager[],
+    private workspaceManagers: ProjectManager[],
     private installedView: NugetExplorerView,
     private updatesView: NugetExplorerView
   ) {}
@@ -255,11 +255,11 @@ export class NugetExplorer {
    *
    * @private
    * @param {string} [prompt='Select Projects']
-   * @returns {Promise<WorkspaceManager[]>}
+   * @returns {Promise<ProjectManager[]>}
    * @memberof NugetExplorer
    */
-  private async promptSelectWorkspaces(prompt = 'Select Projects'): Promise<WorkspaceManager[]> {
-    const selected = await showPickerView<WorkspaceManager>(this.workspaceManagers, true, prompt);
+  private async promptSelectWorkspaces(prompt = 'Select Projects'): Promise<ProjectManager[]> {
+    const selected = await showPickerView<ProjectManager>(this.workspaceManagers, true, prompt);
 
     return selected || [];
   }
