@@ -1,4 +1,4 @@
-import { ProjectManager } from '../manager/projectManager';
+import { ProjectManager } from '../manager/ProjectManager';
 
 export class NugetPackage {
   get label() {

@@ -37,9 +37,7 @@ const config = {
         ]
     },
     plugins: [
-        new CopyPlugin([
-            { from: 'resources', to: 'resources' }
-        ]),
+        new CopyPlugin({ patterns: ['resources', 'resources'] }),
     ],
     node: {
         __dirname: false

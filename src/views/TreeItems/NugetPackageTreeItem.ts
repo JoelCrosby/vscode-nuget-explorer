@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
-import { ProjectManager } from '../../manager/projectManager';
-import { packageIcon, projectIcon, packageUpdateIcon } from '../icons';
+import { ProjectManager } from '../../manager/ProjectManager';
+import { packageIcon, projectIcon, packageUpdateIcon } from '../Icons';
 import { NugetPackage } from '../../models/NugetPackage';
 
 export class NugetPackageTreeItem extends vscode.TreeItem {
@@ -14,31 +14,32 @@ export class NugetPackageTreeItem extends vscode.TreeItem {
     readonly nugetPackage?: NugetPackage
   ) {
     super(label, collapsibleState);
+
+    this.tooltip = this.getTooltip();
+    this.description = this.getDescription();
+    this.iconPath = this.getIcon();
+    this.contextValue = this.getContextValue();
   }
 
   get updateAvailable() {
     return this.nugetPackage && this.nugetPackage.latestVersion();
   }
 
-  get tooltip(): string {
+  getTooltip(): string {
     if (this.nugetPackage && this.updateAvailable) {
       return `${this.label}-${this.version} (Update available -> ${this.nugetPackage.latestVersion()})`;
     }
     return `${this.label}-${this.version}`;
   }
 
-  get description(): string {
+  getDescription(): string {
     if (this.nugetPackage && this.nugetPackage.latestVersion()) {
       return `${this.version} -> ${this.nugetPackage.latestVersion()}`;
     }
     return this.version;
   }
 
-  iconPath = this.getIcon();
-
-  contextValue = this.getContextValue();
-
-  private getIcon() {
+  getIcon() {
     switch (this.type) {
       case TreeItemType.package:
         return this.updateAvailable ? packageUpdateIcon : packageIcon;
@@ -49,7 +50,7 @@ export class NugetPackageTreeItem extends vscode.TreeItem {
     }
   }
 
-  private getContextValue() {
+  getContextValue() {
     switch (this.type) {
       case TreeItemType.package:
         return 'package';

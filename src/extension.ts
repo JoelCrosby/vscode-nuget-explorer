@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
 
-import { DotnetManager } from './manager/dotnetManager';
-import { NugetManager } from './manager/nugetManager';
-import { ProjectManager } from './manager/projectManager';
-import { NugetExplorer } from './nugetExplorer';
-import { ProjectResolver } from './resolver/projectResolver';
-import { InstalledPackagesView } from './views/installedPackagesView';
-import { NugetPackageTreeItem } from './views/treeItems/nugetPackageTreeItem';
-import { UpdatePackagesView } from './views/updatePackagesView';
+import { DotnetManager } from './manager/DotnetManager';
+import { NugetManager } from './manager/NugetManager';
+import { ProjectManager } from './manager/ProjectManager';
+import { NugetExplorer } from './NugetExplorer';
+import { ProjectResolver } from './resolver/ProjectResolver';
+import { InstalledPackagesView } from './views/InstalledPackagesView';
+import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
+import { UpdatePackagesView } from './views/UpdatePackagesView';
 
 
 export function activate(context: vscode.ExtensionContext) {

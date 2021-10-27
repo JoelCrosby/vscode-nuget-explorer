@@ -1,9 +1,9 @@
-import { ProjectManager } from './manager/projectManager';
-import { NugetPackage } from './models/nugetPackage';
-import { SearchService } from './nuget/searchService';
-import { UpdateService } from './nuget/updateService';
+import { ProjectManager } from './manager/ProjectManager';
+import { NugetPackage } from './models/NugetPackage';
+import { SearchService } from './nuget/SearchService';
+import { UpdateService } from './nuget/UpdateService';
 import { showErrorMessage, showMessage, showPickerView, showProgressPopup } from './utils/host';
-import { NugetPackageTreeItem } from './views/treeItems/nugetPackageTreeItem';
+import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
 
 /**
  * Main class for orchastrating Tasks.
@@ -54,8 +54,8 @@ export class NugetExplorer {
         } else {
           showMessage('NuGet package up to date');
         }
-      } catch (error) {
-        showErrorMessage(error.message);
+      } catch (error: unknown) {
+        showErrorMessage((error as unknown as { message: string }).message);
         return;
       }
 
@@ -108,7 +108,7 @@ export class NugetExplorer {
       if (silent) {
         return;
       }
-      showErrorMessage(error.message);
+      showErrorMessage((error as unknown as { message: string }).message);
       return;
     }
 

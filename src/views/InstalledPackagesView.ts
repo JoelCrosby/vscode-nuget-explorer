@@ -1,6 +1,6 @@
 import { EventEmitter, ProviderResult, TreeDataProvider, TreeItem, TreeItemCollapsibleState } from 'vscode';
-import { NugetPackageTreeItem, TreeItemType } from './treeItems/nugetPackageTreeItem';
-import { ProjectManager } from '../manager/projectManager';
+import { NugetPackageTreeItem, TreeItemType } from './TreeItems/NugetPackageTreeItem';
+import { ProjectManager } from '../manager/ProjectManager';
 
 export class InstalledPackagesView implements TreeDataProvider<NugetPackageTreeItem> {
 
@@ -30,7 +30,7 @@ export class InstalledPackagesView implements TreeDataProvider<NugetPackageTreeI
   }
 
   refresh() {
-    this._onDidChangeTreeData.fire();
+    this._onDidChangeTreeData.fire(undefined);
   }
 
   private getPackageTreeItems({ manager }: NugetPackageTreeItem): ProviderResult<NugetPackageTreeItem[]> {

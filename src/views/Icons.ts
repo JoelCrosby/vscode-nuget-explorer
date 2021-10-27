@@ -1,16 +1,24 @@
 import * as path from 'path';
 
-export const packageIcon = {
-  light: path.join(__dirname, 'resources', 'light', 'dep.svg'),
-  dark: path.join(__dirname, 'resources', 'dark', 'dep.svg'),
-};
+const resources = path.join(__filename, '..', '..', 'resources');
+
+export const packageIcon = (() => {
+  const paths = {
+    light: path.join(resources, 'light', 'dep.svg'),
+    dark: path.join(resources, 'dark', 'dep.svg'),
+  };
+
+  console.log({ paths });
+
+  return paths;
+})();
 
 export const packageUpdateIcon = {
-  light: path.join(__dirname, 'resources', 'light', 'dep-update.svg'),
-  dark: path.join(__dirname, 'resources', 'dark', 'dep-update.svg'),
+  light: path.join(resources, 'light', 'dep-update.svg'),
+  dark: path.join(resources, 'dark', 'dep-update.svg'),
 };
 
 export const projectIcon = {
-  light: path.join(__dirname, 'resources', 'light', 'file-directory.svg'),
-  dark: path.join(__dirname, 'resources', 'dark', 'file-directory.svg'),
+  light: path.join(resources, 'light', 'file-directory.svg'),
+  dark: path.join(resources, 'dark', 'file-directory.svg'),
 };

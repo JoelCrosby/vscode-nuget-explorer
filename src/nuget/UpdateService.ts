@@ -1,5 +1,5 @@
-import { NugetApiService } from './nuGetApiService';
-import { NugetPackage } from '../models/nugetPackage';
+import { NugetApiService } from './NuGetApiService';
+import { NugetPackage } from '../models/NugetPackage';
 
 export class UpdateService {
   static async checkForUpdates(nugetPackage: NugetPackage): Promise<string[]> {

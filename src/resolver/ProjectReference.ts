@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { ProjectTree } from '../models/project';
-import { ProjectParser } from '../parser/ProjectParser';
+import { ProjectTree } from '../models/Project';
+import { ProjectParser } from '../parser/projectParser';
 import { XMLParser } from '../parser/XMLParser';
 import { showErrorMessage } from '../utils/host';
-import { ProjectDependacy } from '../models/projectDependancy';
+import { ProjectDependacy } from '../models/ProjectDependancy';
 
 export class ProjectReference {
 

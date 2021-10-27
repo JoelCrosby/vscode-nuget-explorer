@@ -1,6 +1,6 @@
 import * as xml2js from 'xml2js';
 
-import { ProjectTree } from '../models/project';
+import { ProjectTree } from '../models/Project';
 import { ProjectParser } from './projectParser';
 
 export class XMLParser implements ProjectParser {
