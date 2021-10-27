@@ -1,9 +1,9 @@
-import { ProjectManager } from './manager/ProjectManager';
-import { NugetPackage } from './models/NugetPackage';
-import { SearchService } from './nuget/SearchService';
-import { UpdateService } from './nuget/UpdateService';
+import { ProjectManager } from './manager/project-manager';
+import { NugetPackage } from './models/nuget-package';
+import { SearchService } from './nuget/search-service';
+import { UpdateService } from './nuget/update-service';
 import { showErrorMessage, showMessage, showPickerView, showProgressPopup } from './utils/host';
-import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
+import { NugetPackageTreeItem } from './views/treeItems/nuget-package-tree-item';
 
 /**
  * Main class for orchastrating Tasks.
@@ -12,7 +12,6 @@ import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
  * @class NugetExplorer
  */
 export class NugetExplorer {
-
   constructor(
     private workspaceManagers: ProjectManager[],
     private installedView: NugetExplorerView,
@@ -27,7 +26,7 @@ export class NugetExplorer {
   async refresh() {
     const refreshTasks: Array<Promise<void>> = [];
 
-    this.workspaceManagers.forEach(manager => refreshTasks.push(manager.refresh()));
+    this.workspaceManagers.forEach((manager) => refreshTasks.push(manager.refresh()));
 
     await Promise.all(refreshTasks);
 
@@ -82,8 +81,8 @@ export class NugetExplorer {
   private async manageCheckForUpdatesAll(silent = false) {
     const updateTasks: Array<Promise<string[]>> = [];
 
-    this.workspaceManagers.forEach(manager => {
-      manager.packages.forEach(nugetPackage => {
+    this.workspaceManagers.forEach((manager) => {
+      manager.packages.forEach((nugetPackage) => {
         updateTasks.push(UpdateService.checkForUpdates(nugetPackage));
       });
     });
@@ -91,7 +90,7 @@ export class NugetExplorer {
     try {
       const results = await Promise.all(updateTasks);
 
-      this.workspaceManagers.forEach(manager => {
+      this.workspaceManagers.forEach((manager) => {
         manager.refreshUpdates();
       });
 
@@ -99,7 +98,7 @@ export class NugetExplorer {
         return;
       }
 
-      if (results.filter(result => result.length).length) {
+      if (results.filter((result) => result.length).length) {
         showMessage('NuGet package updates are available');
       } else {
         showMessage('NuGet All packages up to date');
@@ -144,7 +143,7 @@ export class NugetExplorer {
       if (selected && selected.length) {
         await showProgressPopup('NuGet Installing Packages', async () => {
           const installQueue: Array<Promise<void>> = [];
-          selected.forEach(manager => installQueue.push(manager.nugetManager.installPackages(packages)));
+          selected.forEach((manager) => installQueue.push(manager.nugetManager.installPackages(packages)));
           await Promise.all(installQueue);
         });
       }
@@ -168,7 +167,7 @@ export class NugetExplorer {
 
     if (!item) {
       const packages = await this.promptSelectPackages('Select packages to remove', 'Select Projects to remove packages from');
-      packages.forEach(nugetPackage => {
+      packages.forEach((nugetPackage) => {
         unistallTasks.push(nugetPackage.manager.nugetManager.uninstall(nugetPackage));
       });
     } else {
@@ -201,7 +200,7 @@ export class NugetExplorer {
 
     if (!item) {
       const packages = await this.promptSelectPackages('Select packages to update', 'Select Projects to update packages from');
-      packages.forEach(nugetPackage => updateTasks.push(nugetPackage.manager.nugetManager.update(nugetPackage)));
+      packages.forEach((nugetPackage) => updateTasks.push(nugetPackage.manager.nugetManager.update(nugetPackage)));
     } else {
       if (item.nugetPackage) {
         progressMessage = `NuGet Updating Package ${item.label}`;
@@ -227,10 +226,7 @@ export class NugetExplorer {
    * @returns {Promise<NugetPackage[]>}
    * @memberof NugetExplorer
    */
-  private async promptSelectPackages(
-    prompt = 'Select Packages',
-    workspacesPrompt = 'Select Projects'
-  ): Promise<NugetPackage[]> {
+  private async promptSelectPackages(prompt = 'Select Packages', workspacesPrompt = 'Select Projects'): Promise<NugetPackage[]> {
     if (this.workspaceManagers.length === 1) {
       const selected = await showPickerView<NugetPackage>(this.workspaceManagers[0].packages, true, prompt);
       return selected || [];
@@ -239,9 +235,9 @@ export class NugetExplorer {
     const selectedWorkspaces = await this.promptSelectWorkspaces(workspacesPrompt);
     const packagesToSelect: NugetPackage[] = [];
 
-    selectedWorkspaces.forEach(workspace => {
+    selectedWorkspaces.forEach((workspace) => {
       if (selectedWorkspaces.length > 1) {
-        workspace.packages.forEach(item => (item.projectName = workspace.name));
+        workspace.packages.forEach((item) => (item.projectName = workspace.name));
       }
       packagesToSelect.push(...workspace.packages);
     });

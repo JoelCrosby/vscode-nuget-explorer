@@ -1,7 +1,7 @@
 import Axios from 'axios';
 
-import { SearchResult } from '../models/SearchResult';
-import { VersionsResponse } from '../models/VersionsRespose';
+import { SearchResult } from '../models/search-result';
+import { VersionsResponse } from '../models/versions-respose';
 
 export class NugetApiService {
   static baseUri = 'https://api-v2v3search-0.nuget.org/query';

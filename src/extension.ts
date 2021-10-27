@@ -1,14 +1,13 @@
 import * as vscode from 'vscode';
 
-import { DotnetManager } from './manager/DotnetManager';
-import { NugetManager } from './manager/NugetManager';
-import { ProjectManager } from './manager/ProjectManager';
-import { NugetExplorer } from './NugetExplorer';
-import { ProjectResolver } from './resolver/ProjectResolver';
-import { InstalledPackagesView } from './views/InstalledPackagesView';
-import { NugetPackageTreeItem } from './views/TreeItems/NugetPackageTreeItem';
-import { UpdatePackagesView } from './views/UpdatePackagesView';
-
+import { DotnetManager } from './manager/dotnet-manager';
+import { NugetManager } from './manager/nuget-manager';
+import { ProjectManager } from './manager/project-manager';
+import { NugetExplorer } from './nuget-explorer';
+import { ProjectResolver } from './resolver/project-resolver';
+import { InstalledPackagesView } from './views/installed-packages-view';
+import { NugetPackageTreeItem } from './views/treeItems/nuget-package-tree-item';
+import { UpdatePackagesView } from './views/update-packages-view';
 
 export function activate(context: vscode.ExtensionContext) {
   extensionManager.start();
@@ -27,7 +26,7 @@ export class ExtensionManager {
   async start() {
     const projects = await ProjectResolver.getProjectsInWorkspace();
 
-    projects.forEach(project => {
+    projects.forEach((project) => {
       const nugetManager = new NugetManager(new DotnetManager(this.outputChannel, project.rootFolder), this.installedPackagesView);
       this.workspaceManagers.push(new ProjectManager(project.name, project, nugetManager));
     });

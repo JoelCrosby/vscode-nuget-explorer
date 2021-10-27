@@ -1,4 +1,4 @@
-import { NugetApiService } from './NuGetApiService';
+import { NugetApiService } from './nuget-api-service';
 import { showInputBox, showPickerView, PickerViewItem } from '../utils/host';
 
 export class SearchService {
@@ -15,7 +15,7 @@ export class SearchService {
       return;
     }
 
-    const options = results.data.map(result => {
+    const options = results.data.map((result) => {
       return {
         label: result.id,
         description: result.version,
@@ -29,6 +29,6 @@ export class SearchService {
       return [];
     }
 
-    return selectedOptions.map(item => item.label);
+    return selectedOptions.map((item) => item.label);
   }
 }

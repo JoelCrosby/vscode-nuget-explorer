@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 
-import { ProjectManager } from '../../manager/ProjectManager';
-import { packageIcon, projectIcon, packageUpdateIcon } from '../Icons';
-import { NugetPackage } from '../../models/NugetPackage';
+import { ProjectManager } from '../../manager/project-manager';
+import { packageIcon, projectIcon, packageUpdateIcon } from '../icons';
+import { NugetPackage } from '../../models/nuget-package';
 
 export class NugetPackageTreeItem extends vscode.TreeItem {
   constructor(

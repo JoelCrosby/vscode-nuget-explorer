@@ -1,7 +1,7 @@
 import * as xml2js from 'xml2js';
 
-import { ProjectTree } from '../models/Project';
-import { ProjectParser } from './projectParser';
+import { ProjectTree } from '../models/project';
+import { ProjectParser } from './project-parser';
 
 export class XMLParser implements ProjectParser {
   private parser: xml2js.Parser = new xml2js.Parser();

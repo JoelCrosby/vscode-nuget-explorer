@@ -1,7 +1,6 @@
 import { EventEmitter, ProviderResult, TreeDataProvider, TreeItem, TreeItemCollapsibleState } from 'vscode';
-import { ProjectManager } from '../manager/ProjectManager';
-import { NugetPackageTreeItem, TreeItemType } from './TreeItems/NugetPackageTreeItem';
-
+import { ProjectManager } from '../manager/project-manager';
+import { NugetPackageTreeItem, TreeItemType } from './treeItems/nuget-package-tree-item';
 
 export class UpdatePackagesView implements TreeDataProvider<NugetPackageTreeItem> {
   private _onDidChangeTreeData = new EventEmitter<NugetPackageTreeItem | undefined>();
@@ -17,15 +16,11 @@ export class UpdatePackagesView implements TreeDataProvider<NugetPackageTreeItem
     if (element && element.type === TreeItemType.workspace) {
       return this.getPackageTreeItems(element);
     } else {
-      return this.managers.filter(manager => manager.hasUpdates).map(manager => {
-        return new NugetPackageTreeItem(
-          manager.name,
-          '',
-          TreeItemCollapsibleState.Expanded,
-          TreeItemType.workspace,
-          manager
-        );
-      });
+      return this.managers
+        .filter((manager) => manager.hasUpdates)
+        .map((manager) => {
+          return new NugetPackageTreeItem(manager.name, '', TreeItemCollapsibleState.Expanded, TreeItemType.workspace, manager);
+        });
     }
   }
 
@@ -43,15 +38,7 @@ export class UpdatePackagesView implements TreeDataProvider<NugetPackageTreeItem
     }
 
     return manager.packagesWithUpdates.map(
-      item =>
-        new NugetPackageTreeItem(
-          item.name,
-          item.version,
-          TreeItemCollapsibleState.None,
-          TreeItemType.package,
-          manager,
-          item
-        )
+      (item) => new NugetPackageTreeItem(item.name, item.version, TreeItemCollapsibleState.None, TreeItemType.package, manager, item)
     );
   }
 }

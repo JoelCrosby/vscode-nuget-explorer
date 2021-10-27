@@ -1,6 +1,6 @@
-import { DotnetManager } from './DotnetManager';
-import { InstalledPackagesView } from '../views/InstalledPackagesView';
-import { NugetPackage } from '../models/NugetPackage';
+import { DotnetManager } from './dotnet-manager';
+import { InstalledPackagesView } from '../views/installed-packages-view';
+import { NugetPackage } from '../models/nuget-package';
 
 export class NugetManager {
   constructor(private dotnetManager: DotnetManager, private installedPackages: InstalledPackagesView) {}
@@ -12,7 +12,7 @@ export class NugetManager {
 
     const packagesToInstall: Array<Promise<void>> = [];
 
-    packageNames.forEach(option => packagesToInstall.push(this.dotnetManager.execute(['add', 'package', option])));
+    packageNames.forEach((option) => packagesToInstall.push(this.dotnetManager.execute(['add', 'package', option])));
 
     try {
       await Promise.all(packagesToInstall);

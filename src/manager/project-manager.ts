@@ -1,10 +1,9 @@
-import { ProjectReference } from '../resolver/ProjectReference';
-import { NugetManager } from './NugetManager';
+import { ProjectReference } from '../resolver/project-reference';
+import { NugetManager } from './nuget-manager';
 import { QuickPickItem } from 'vscode';
-import { NugetPackage } from '../models/NugetPackage';
+import { NugetPackage } from '../models/nuget-package';
 
 export class ProjectManager implements QuickPickItem {
-
   get label(): string {
     return this.name;
   }
@@ -25,11 +24,11 @@ export class ProjectManager implements QuickPickItem {
 
   async refresh() {
     const deps = await this.project.getProjectDependacies();
-    this.packages = deps.map(dep => new NugetPackage(dep.name, dep.name, dep.version, this));
+    this.packages = deps.map((dep) => new NugetPackage(dep.name, dep.name, dep.version, this));
     this.refreshUpdates();
   }
 
   refreshUpdates() {
-    this.packagesWithUpdates = this.packages.filter(dep => dep.latestVersion());
+    this.packagesWithUpdates = this.packages.filter((dep) => dep.latestVersion());
   }
 }

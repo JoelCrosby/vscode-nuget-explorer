@@ -1,14 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { ProjectTree } from '../models/Project';
-import { ProjectParser } from '../parser/projectParser';
-import { XMLParser } from '../parser/XMLParser';
+import { ProjectTree } from '../models/project';
+import { ProjectParser } from '../parser/project-parser';
+import { XMLParser } from '../parser/xml-parser';
 import { showErrorMessage } from '../utils/host';
-import { ProjectDependacy } from '../models/ProjectDependancy';
+import { ProjectDependacy } from '../models/project-dependancy';
 
 export class ProjectReference {
-
   readonly rootFolder: string;
   readonly name: string;
 
@@ -65,7 +64,7 @@ export class ProjectReference {
     const packages: ProjectDependacy[] = [];
 
     if (Array.isArray(project.ItemGroup)) {
-      project.ItemGroup.forEach(itemGroup => {
+      project.ItemGroup.forEach((itemGroup) => {
         packages.push(...this.getPackages(itemGroup));
       });
     } else if (typeof project.ItemGroup === 'object') {
@@ -92,4 +91,3 @@ export class ProjectReference {
     return pakages;
   }
 }
-

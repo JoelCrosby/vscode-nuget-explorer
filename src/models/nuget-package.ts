@@ -1,4 +1,4 @@
-import { ProjectManager } from '../manager/ProjectManager';
+import { ProjectManager } from '../manager/project-manager';
 
 export class NugetPackage {
   get label() {
@@ -13,12 +13,7 @@ export class NugetPackage {
   projectName?: string;
   versions?: string[];
 
-  constructor(
-    readonly id: string,
-    readonly name: string,
-    readonly version: string,
-    readonly manager: ProjectManager
-  ) {}
+  constructor(readonly id: string, readonly name: string, readonly version: string, readonly manager: ProjectManager) {}
 
   latestVersion(): string | undefined {
     if (!this.updates) {

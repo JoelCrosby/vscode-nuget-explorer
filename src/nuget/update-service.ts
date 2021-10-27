@@ -1,5 +1,5 @@
-import { NugetApiService } from './NuGetApiService';
-import { NugetPackage } from '../models/NugetPackage';
+import { NugetApiService } from './nuget-api-service';
+import { NugetPackage } from '../models/nuget-package';
 
 export class UpdateService {
   static async checkForUpdates(nugetPackage: NugetPackage): Promise<string[]> {
@@ -21,7 +21,7 @@ export class UpdateService {
       return [];
     }
 
-    const currentVersionIndex = versions.findIndex(version => version === nugetPackage.version);
+    const currentVersionIndex = versions.findIndex((version) => version === nugetPackage.version);
 
     const updates: string[] = [];
 
