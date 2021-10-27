@@ -3,7 +3,6 @@ import * as path from 'path';
 
 import { ProjectTree } from '../models/project';
 import { ProjectParser } from '../parser/project-parser';
-import { XMLParser } from '../parser/xml-parser';
 import { showErrorMessage } from '../utils/host';
 import { ProjectDependacy } from '../models/project-dependancy';
 
@@ -11,7 +10,7 @@ export class ProjectReference {
   readonly rootFolder: string;
   readonly name: string;
 
-  private parser: ProjectParser = new XMLParser();
+  private parser = new ProjectParser();
 
   constructor(readonly projectFilePath: string) {
     this.rootFolder = path.dirname(projectFilePath);
